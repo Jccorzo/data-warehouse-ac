@@ -1,6 +1,6 @@
 module.exports = (app) => {
 
-    app.post('/user', async (req,res) => {
+    app.post('/user', async (req, res) => {
 
     })
 
@@ -8,11 +8,15 @@ module.exports = (app) => {
 
     })
 
-    app.put('/user', async (req,res) => {
+    app.put('/user', async (req, res) => {
 
     })
 
-    app.delete('/user', async (req,res) => {
-        
+    app.delete('/user', async (req, res) => {
+
+    })
+
+    app.get('/user', async (req, res) => {
+
     })
 }

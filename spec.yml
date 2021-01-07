@@ -1,0 +1,617 @@
+openapi: "3.0.0"
+info:
+  description: ""
+  title: "Data Warehouse"
+  version: "1.0.0"
+servers: 
+  - url: "http://localhost:3000"
+components:
+  securitySchemes:
+    bearerAuth:         
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+paths:
+  /user/login:
+    post: 
+      summary: "Login user"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties: 
+                email: 
+                  type: "string"
+                password:
+                  type: "string"
+      responses: 
+        "200":
+          description: "Login Succeed"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  token:
+                    type: "string"
+        "400":
+          description: "username or password incorrect"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+  /user: 
+      post:
+        security:
+          - bearerAuth: []
+        summary: "Create user"
+        requestBody: 
+          content: 
+            application/json:
+              schema:
+                type: "object"
+                properties: 
+                  name:
+                    type: "string"
+                  lastName:
+                    type: "string"
+                  email:
+                    type: "string"
+                  admin: 
+                    type: "boolean"
+                  password: 
+                    type: "string"
+        responses:
+          "201":
+            description: "User created"
+            content:
+              application/json:
+                schema:
+                  type: "object"
+                  properties:
+                    token:
+                      type: "string"
+                    mensaje: 
+                      type: "string"
+                    user:
+                      type: "object"
+                      properties: 
+                        message:
+                          type: "string"
+          "400":
+            description: "User exist"
+            content:
+              application/json:
+                schema:
+                  type: "object"
+                  properties:
+                    message:
+                      type: "string"
+      put:
+        security:
+          - bearerAuth: []
+        summary: "Update user"
+        requestBody: 
+          content: 
+            application/json:
+              schema:
+                type: "object"
+                properties: 
+                  name:
+                    type: "string"
+                  lastName:
+                    type: "string"
+                  email:
+                    type: "string"
+                  admin: 
+                    type: "boolean"
+        responses:
+          "201":
+            description: "User updated"
+            content:
+              application/json:
+                schema:
+                  type: "object"
+                  properties:
+                    message: 
+                      type: "string"
+          "400":
+            description: "User exist"
+            content:
+              application/json:
+                schema:
+                  type: "object"
+                  properties:
+                    message:
+                      type: "string"
+      delete:
+        security:
+          - bearerAuth: []
+        summary: "Delete user"
+        parameters:
+          - name: email
+            in: query
+            required: true
+            schema:
+              type: "string"
+        responses:
+          "200":
+            description: "delete succesfull"
+            content:
+              application/json:
+                schema:
+                  type: "object"
+                  properties: 
+                    message:
+                      type: "string"
+          "400":
+            description: "some error happend"
+            content:
+              application/json:
+                schema:
+                  type: "object"
+                  properties:
+                    message:
+                      type: "string"
+          "401":
+            description: "authentication errors"
+            content:
+              application/json:
+                schema:
+                  type: "object"
+                  properties: 
+                    message:
+                      type: "string"
+      get:
+        security:
+          - bearerAuth: []
+        summary: "Get all Users"
+        responses:
+          "200":
+            description: "request success"
+            content:
+              application/json:
+                schema:
+                  type: "object"
+                  properties:
+                    users: 
+                      type: "array"
+                      items: 
+                        type: "object"
+                        properties:
+                          name:
+                            type: "string"
+                          lastName:
+                            type: "string"
+                          email:
+                            type: "string"
+                          admin: 
+                            type: "boolean"
+  /company:
+    get:
+      security:
+        - bearerAuth: []
+      summary: "Get all companies"
+      responses:
+        "200":
+          description: "request success"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties: 
+                  companies:
+                    type: "array"
+                    items: 
+                      type: "object"
+                      properties:
+                        name:
+                          type: "string"
+                        address:
+                          type: "string"
+                        email:
+                          type: "string"
+                        phone: 
+                          type: "number"
+                        city:
+                          type: "string"
+        "401":
+          description: "authentication errors"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties: 
+                  message:
+                    type: "string"
+        "400":
+          description: "some error happend"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties: 
+                  message:
+                    type: "string"
+    post:
+      security:
+        - bearerAuth: []
+      summary: "Create company"
+      requestBody: 
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                name:
+                  type: "string"
+                address:
+                  type: "string"
+                email:
+                  type: "string"
+                phone: 
+                  type: "number"
+                city:
+                  type: "string"
+                companyId:
+                  type: "string"
+      responses:
+        "201":
+          description: "Company created"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message: 
+                    type: "string"
+        "400":
+          description: "some error happend"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+        "401":
+          description: "authentication errors"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+    put: 
+      security:
+        - bearerAuth: []
+      summary: "update product"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                name:
+                  type: "string"
+                address:
+                  type: "string"
+                email:
+                  type: "string"
+                phone: 
+                  type: "number"
+                city:
+                  type: "string"
+                companyId:
+                  type: "string"
+      responses:
+        "200":
+          description: "updated company"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message: 
+                    type: "string"
+        "400":
+          description: "some error happend"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+        "401":
+          description: "authentication errors"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+    delete:
+      security:
+        - bearerAuth: []
+      summary: "delete specific company"
+      parameters:
+        - name: companyId
+          in: query
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "deleted company"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties: 
+                  mensaje:
+                    type: "string"
+        "400":
+          description: "some error happend"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  mensaje:
+                    type: "string"
+        "401":
+          description: "authentication errors"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties: 
+                  mensaje:
+                    type: "string"
+  /contact:
+    get:
+      security:
+        - bearerAuth: []
+      summary: "Get all Contacts"
+      responses:
+        "200":
+          description: "request success"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  contacts:
+                    type: "array"
+                    items: 
+                      type: "object"
+                      properties:
+                        contactId:
+                          type: "string"
+                        name: 
+                          type: "string"
+                        lastName:
+                          type: "string"
+                        position:
+                          type: "string"
+                        email:
+                          type: "string"
+                        company:
+                          type: "string"
+                        city: 
+                          type: "object"
+                          properties: 
+                            name: 
+                              type: "string"
+                            cityId:
+                              type: "string"
+                        address:
+                          type: "string"
+                        channels:
+                          type: "array"
+                          items:
+                            type: "object"
+                            properties:
+                              name:
+                                type: "string"
+                              value: 
+                                type: "string"
+                              preference: 
+                                type: "string"
+                        interest: 
+                          type: "number"  
+        "400":
+          description: "some error happend"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  mensaje:
+                    type: "string"
+        "401":
+          description: "authentication errors"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties: 
+                  mensaje:
+                    type: "string"
+    post:
+      security:
+        - bearerAuth: []
+      summary: "Create contact"
+      requestBody: 
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                products:
+                  type: "array"
+                  items:
+                    type: "object"
+                    properties:
+                        name: 
+                          type: "string"
+                        lastName:
+                          type: "string"
+                        position:
+                          type: "string"
+                        email:
+                          type: "string"
+                        company:
+                          type: "string"
+                        city: 
+                          type: "object"
+                          properties: 
+                            name: 
+                              type: "string"
+                            cityId:
+                              type: "string"
+                        address:
+                          type: "string"
+                        channels:
+                          type: "array"
+                          items:
+                            type: "object"
+                            properties:
+                              name:
+                                type: "string"
+                              value: 
+                                type: "string"
+                              preference: 
+                                type: "string"
+                        interest: 
+                          type: "number"
+      responses:
+        "201":
+          description: "order created"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  mensaje: 
+                    type: "string"
+        "401":
+          description: "authentication errors"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  mensaje:
+                    type: "string"
+    put: 
+      security:
+        - bearerAuth: []
+      summary: "update order"
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                contactId: 
+                  type: "string"
+                name: 
+                  type: "string"
+                lastName:
+                  type: "string"
+                position:
+                  type: "string"
+                email:
+                  type: "string"
+                company:
+                  type: "string"
+                city: 
+                  type: "object"
+                  properties: 
+                    name: 
+                      type: "string"
+                    cityId:
+                      type: "string"
+                address:
+                  type: "string"
+                channels:
+                  type: "array"
+                  items:
+                    type: "object"
+                    properties:
+                      name:
+                        type: "string"
+                      value: 
+                        type: "string"
+                      preference: 
+                        type: "string"
+                interest: 
+                  type: "number"
+      responses:
+        "200":
+          description: "updated order"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  mensaje: 
+                    type: "string"
+        "401":
+          description: "authentication errors"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  mensaje:
+                    type: "string"
+        "default":
+          description: "Default error, some error happened"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  mensaje:
+                    type: "string"
+    delete:
+      security:
+        - bearerAuth: []
+      summary: "delete specific order"
+      parameters:
+        - name: contactId
+          in: query
+          required: true
+          schema:
+            type: "string"
+      responses:
+        "200":
+          description: "delete succesfull"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties: 
+                  name: 
+                    type: "string"
+                  price:
+                    type: "number"
+        "401":
+          description: "authentication errors"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties: 
+                  mensaje:
+                    type: "string"
+  
