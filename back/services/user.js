@@ -11,9 +11,8 @@ exports.create = (user) => {
 
 exports.listAll = () => User.find()
 
-exports.update = (user) => {
-    return User.findByIdAndUpdate(user._id, user)
-}
+exports.update = (user) => User.findByIdAndUpdate(user._id, user)
+
 
 exports.remove = (userId) => {
     return User.findByIdAndDelete(userId)

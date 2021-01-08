@@ -1,12 +1,13 @@
 const userMethods = require('../services/user');
+const { validateAdmin } = require('../middlewares/validation');
 
 module.exports = (app) => {
 
-    app.post('/user', async (req, res) => {
+    app.post('/user', validateAdmin, async (req, res) => {
         const user = req.body;
         try {
-            const response = await userMethods.create(user)
-            res.json({ message: response })
+            await userMethods.create(user)
+            res.status(201).json({ message: 'Usuario creado correctamente' })
         } catch (e) {
             res.status(400).json(e.message)
         }
@@ -22,15 +23,27 @@ module.exports = (app) => {
         }
     })
 
-    app.put('/user', async (req, res) => {
-
+    app.put('/user', validateAdmin, async (req, res) => {
+        const user = req.body;
+        try {
+            await userMethods.update(user)
+            res.json({ message: 'Usuario actualizado correctamente' })
+        } catch (e) {
+            res.status(400).json({ message: e.message })
+        }
     })
 
-    app.delete('/user', async (req, res) => {
-
+    app.delete('/user', validateAdmin, async (req, res) => {
+        const userId = req.query.userId;
+        try {
+            await userMethods.remove(userId)
+            res.json({ message: 'Usuario eliminado correctamente' })
+        } catch (e) {
+            res.status(400).json({ message: e.message })
+        }
     })
 
-    app.get('/user', async (_, res) => {
+    app.get('/user', validateAdmin, async (_, res) => {
         try {
             const users = await userMethods.listAll()
             const usersWithoutPass = users.map(user => {
