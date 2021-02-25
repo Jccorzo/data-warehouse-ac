@@ -9,7 +9,7 @@ const ContactSchema = mongoose.Schema({
     company: { type: String, required: true },
     city: {
         name: { type: String, required: true },
-        cityId: { type: String, required: true }
+        code: { type: String, required: true }
     },
     address: { type: String, required: true },
     channels: [
