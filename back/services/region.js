@@ -1,23 +1,68 @@
 const Region = require('../models/region');
-exports.getAll = () => Region.find()
+exports.getAllRegions = () => Region.find()
 
-exports.addRegion = async (region) => {
-    const newRegion = new Region(region)
-    await newRegion.save()
+exports.createRegion = async (region) => await Region.create(region)
+
+exports.deleteRegion = async (regionId) => {
+    await Region.findByIdAndDelete(regionId)
 }
 
-exports.deleteRegion = async (region) => {
-    await Region.deleteOne(region)
+exports.createCountry = async (region) => await Region.updateOne({ _id: region._id }, { $addToSet: { countries: region.country } })
+
+exports.updateCountry = async (object) => {
+    await Region.updateOne(
+        { _id: object._id },
+        {
+            $set: {
+                "countries.$[country].name": object.country.name
+            }
+        }, {
+        arrayFilters: [
+            { "country._id": object.country._id }
+        ]
+    })
 }
 
-exports.updateRegion = async (region) => {
-    await Region.findByIdAndUpdate(region)
+exports.deleteCountry = async (regionId, countryId) => {
+    await Region.updateOne(
+        { _id: regionId },
+        {
+            $pull: {
+                countries: { _id: countryId }
+            }
+        })
 }
 
-exports.deleteCountry = async (object) => {
-    await Region.updateOne({ _id: object._id }, { $unset: { "countries": { "name": object.country } } })
+exports.createCity = async (region) => await Region.updateOne(
+    { _id: region._id },
+    { $addToSet: { "countries.$[country].cities": region.country.city } }, {
+    arrayFilters: [
+        { "country._id": region.country._id }
+    ]
+})
+
+exports.updateCity = async (region) => {
+    await Region.updateOne(
+        { _id: region._id },
+        { $set: { "countries.$[country].cities.$[city].name": region.country.city.name } },
+        {
+            arrayFilters: [
+                { "country._id": region.country._id },
+                { "city._id": region.country.city._id }
+            ]
+        }
+    )
 }
 
-exports.deleteCity = async (object) => {
-    await Region.updateOne({ _id: object._id }, { $unset: { "cities": { "name": object.city } } })
+exports.deleteCity = async (region) => {
+    await Region.updateOne(
+        { _id: region.regionId },
+        { $pull: { "countries.$[country].cities": { _id: region.cityId } } },
+        {
+            arrayFilters: [
+                { "country._id": region.countryId }
+            ]
+        }
+    )
 }
+

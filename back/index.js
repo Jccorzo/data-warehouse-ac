@@ -6,6 +6,7 @@ const middlewares = require('./middlewares/validation');
 const userRoutes = require('./routes/user');
 const contactRoutes = require('./routes/contact');
 const companyRoutes = require('./routes/company');
+const regionRoutes = require('./routes/region');
 const config = require('./config');
 const app = express();
 
@@ -30,6 +31,7 @@ mongoose.connect(config.url,{
 userRoutes(app);
 contactRoutes(app);
 companyRoutes(app);
+regionRoutes(app);
 
 app.listen(3001, () => {
     console.log('app started')

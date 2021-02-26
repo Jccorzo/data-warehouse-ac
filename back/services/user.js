@@ -5,7 +5,7 @@ const config = require('../config');
 
 exports.create = (user) => {
     const securePass = crypto.createHash('md5').update(user.password).digest('hex');
-    await new User({...user, password: securePass}).save()
+    User.create({...user, password: securePass})
 }
 
 exports.listAll = () => User.find()

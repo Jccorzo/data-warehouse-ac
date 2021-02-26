@@ -1,7 +1,6 @@
 const mongoose = require('mongoose');
 
 const ContactSchema = mongoose.Schema({
-    contactId: { type: mongoose.Schema.Types.ObjectId, required: true, auto: true },
     name: { type: String, required: true },
     lastName: { type: String, required: true },
     position: { type: String, required: true },
@@ -14,9 +13,9 @@ const ContactSchema = mongoose.Schema({
     address: { type: String, required: true },
     channels: [
         {
-            name: String,
-            value: String,
-            preference: String
+            name: { type: String },
+            value: { type: String },
+            preference: { type: String }
         }
     ],
     interest: { type: Number, required: true }
