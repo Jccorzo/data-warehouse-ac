@@ -183,6 +183,8 @@ paths:
                       items: 
                         type: "object"
                         properties:
+                          _id:
+                            type: "string"
                           name:
                             type: "string"
                           lastName:
@@ -209,6 +211,8 @@ paths:
                     items: 
                       type: "object"
                       properties:
+                        _id:
+                          type: "string"
                         name:
                           type: "string"
                         address:
@@ -393,7 +397,7 @@ paths:
                     items: 
                       type: "object"
                       properties:
-                        contactId:
+                        _id:
                           type: "string"
                         name: 
                           type: "string"
@@ -614,4 +618,351 @@ paths:
                 properties: 
                   mensaje:
                     type: "string"
-  
+  /region:
+    post:
+      summary: "Create region"
+      security:
+        - bearerAuth: []
+      requestBody: 
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                name: 
+                  type: "string"
+      responses: 
+        "201":
+          description: "Region created"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  token:
+                    type: "string"
+        "400":
+          description: "some error happend"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+    delete:
+        security:
+          - bearerAuth: []
+        summary: "Delete region"
+        parameters:
+          - name: regionId
+            in: query
+            required: true
+            schema:
+              type: "string"
+        responses:
+          "200":
+            description: "delete succesfull"
+            content:
+              application/json:
+                schema:
+                  type: "object"
+                  properties: 
+                    message:
+                      type: "string"
+          "400":
+            description: "some error happend"
+            content:
+              application/json:
+                schema:
+                  type: "object"
+                  properties:
+                    message:
+                      type: "string"
+          "401":
+            description: "authentication errors"
+            content:
+              application/json:
+                schema:
+                  type: "object"
+                  properties: 
+                    message:
+                      type: "string"
+    get:
+        security:
+          - bearerAuth: []
+        summary: "Get all regions"
+        responses:
+          "200":
+            description: "request success"
+            content:
+              application/json:
+                schema:
+                  type: "object"
+                  properties:
+                    regions: 
+                      type: "array"
+                      items: 
+                        type: "object"
+                        properties:
+                          _id: 
+                            type: "string"
+                          name:
+                            type: "string"
+                          countries:
+                            type: "array"
+                            items:
+                              type: "object"
+  /region/country:
+    post:
+      summary: "Create country"
+      security:
+        - bearerAuth: []
+      requestBody: 
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                _id: 
+                  type: "string"
+                country:
+                  type: "object"
+                  properties:
+                    name:
+                      type: "string"
+      responses: 
+        "201":
+          description: "Country created"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  token:
+                    type: "string"
+        "400":
+          description: "some error happend"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+    put:
+      summary: "Update country"
+      security:
+        - bearerAuth: []
+      requestBody: 
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                _id: 
+                  type: "string"
+                country:
+                  type: "object"
+                  properties:
+                    _id:
+                      type: "string"
+                    name:
+                      type: "string"
+      responses: 
+        "200":
+          description: "Country updated"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  token:
+                    type: "string"
+        "400":
+          description: "some error happend"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+    delete:
+        security:
+          - bearerAuth: []
+        summary: "Delete region"
+        parameters:
+          - name: regionId
+            in: query
+            required: true
+            schema:
+              type: "string"
+          - name: countryId
+            in: query
+            required: true
+            schema:
+              type: "string"
+        responses:
+          "200":
+            description: "delete succesfull"
+            content:
+              application/json:
+                schema:
+                  type: "object"
+                  properties: 
+                    message:
+                      type: "string"
+          "400":
+            description: "some error happend"
+            content:
+              application/json:
+                schema:
+                  type: "object"
+                  properties:
+                    message:
+                      type: "string"
+          "401":
+            description: "authentication errors"
+            content:
+              application/json:
+                schema:
+                  type: "object"
+                  properties: 
+                    message:
+                      type: "string"       
+  /region/country/city:
+    post:
+      summary: "Create city"
+      security:
+        - bearerAuth: []
+      requestBody: 
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                _id: 
+                  type: "string"
+                country:
+                  type: "object"
+                  properties:
+                    _id:
+                      type: "string"
+                    city:
+                      type: "object"
+                      properties:
+                        code:
+                          type: "string"
+                        name:
+                          type: "string"
+      responses: 
+        "201":
+          description: "City created"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  token:
+                    type: "string"
+        "400":
+          description: "some error happend"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+    put:
+      summary: "Update City"
+      security:
+        - bearerAuth: []
+      requestBody: 
+        content:
+          application/json:
+            schema:
+              type: "object"
+              properties:
+                _id: 
+                  type: "string"
+                country:
+                  type: "object"
+                  properties:
+                    _id:
+                      type: "string"
+                    city:
+                      type: "object"
+                      properties:
+                        _id:
+                          type: "string"
+                        name:
+                          type: "string"
+      responses: 
+        "200":
+          description: "Region created"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  token:
+                    type: "string"
+        "400":
+          description: "some error happend"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties:
+                  message:
+                    type: "string"
+    delete:
+        security:
+          - bearerAuth: []
+        summary: "Delete city"
+        parameters:
+          - name: regionId
+            in: query
+            required: true
+            schema:
+              type: "string"
+          - name: countryId
+            in: query
+            required: true
+            schema:
+              type: "string"
+          - name: cityId
+            in: query
+            required: true
+            schema:
+              type: "string"
+        responses:
+          "200":
+            description: "delete succesfull"
+            content:
+              application/json:
+                schema:
+                  type: "object"
+                  properties: 
+                    message:
+                      type: "string"
+          "400":
+            description: "some error happend"
+            content:
+              application/json:
+                schema:
+                  type: "object"
+                  properties:
+                    message:
+                      type: "string"
+          "401":
+            description: "authentication errors"
+            content:
+              application/json:
+                schema:
+                  type: "object"
+                  properties: 
+                    message:
+                      type: "string"       

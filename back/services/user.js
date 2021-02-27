@@ -3,9 +3,9 @@ const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const config = require('../config');
 
-exports.create = (user) => {
+exports.create = async (user) => {
     const securePass = crypto.createHash('md5').update(user.password).digest('hex');
-    User.create({...user, password: securePass})
+    await User.create({...user, password: securePass})
 }
 
 exports.listAll = () => User.find()
