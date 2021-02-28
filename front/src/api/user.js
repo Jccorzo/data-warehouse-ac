@@ -6,9 +6,13 @@ export const create = async (user) => {
 }
 
 export const login = async (user) => {
-    const response = await fetch("http://localhost:3001/user/login", { method: 'POST', body: user })
+    const response = await fetch("http://localhost:3001/user/login", { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(user) })
     const data = await response.json()
-    return data
+    if(response.status !== 200 ){
+        throw new Error(data.message)
+    } else {
+        return data
+    }
 }
 
 export const update = async (user) => {

@@ -1,0 +1,14 @@
+[
+    {
+      "name": "Joe Smith",
+      "email": "jsmith@mail.com",
+      "admin": false,
+      "password": "e10adc3949ba59abbe56e057f20f883e"
+    },
+    {
+      "name": "Jen Ford",
+      "email": "jford@mail.com",
+      "admin": true,
+      "password": "e10adc3949ba59abbe56e057f20f883e"
+    }
+  ]

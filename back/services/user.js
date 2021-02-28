@@ -5,7 +5,7 @@ const config = require('../config');
 
 exports.create = async (user) => {
     const securePass = crypto.createHash('md5').update(user.password).digest('hex');
-    await User.create({...user, password: securePass})
+    await User.create({ ...user, password: securePass })
 }
 
 exports.listAll = () => User.find()
@@ -18,17 +18,17 @@ exports.remove = (userId) => {
 }
 
 exports.getUserByEmail = async (user) => {
-    const users = await User.where({ email: user.email })
+    const users = await User.find({ email: user.email })
     if (users.length > 0) {
         const securePass = crypto.createHash('md5').update(user.password).digest('hex');
-        if(securePass === users[0].password){
+        if (securePass === users[0].password) {
             const userToken = jwt.sign({
                 user: user.email,
                 admin: users[0].admin
             }, config.jwt, {
                 algorithm: "HS512",
             });
-            return userToken
+            return { token: userToken, email: users[0].email, admin: users[0].admin }
         } else {
             throw new Error('Usuario o contraseña incorrecto')
         }

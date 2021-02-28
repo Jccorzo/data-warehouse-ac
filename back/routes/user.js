@@ -16,8 +16,8 @@ module.exports = (app) => {
     app.post('/user/login', async (req, res) => {
         const user = req.body;
         try {
-            const token = await userMethods.getUserByEmail(user);
-            res.json({ token })
+            const getUser = await userMethods.getUserByEmail(user);
+            res.json({ ...getUser })
         } catch (e) {
             res.status(400).json({ message: e.message })
         }

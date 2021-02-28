@@ -5,7 +5,7 @@ import companyReducer from './company';
 import regionReducer from './region';
 
 export default combineReducers({
-    user: userReducer,
+    auth: userReducer,
     contact: contactReducer,
     company: companyReducer,
     region: regionReducer

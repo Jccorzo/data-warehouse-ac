@@ -1,0 +1,59 @@
+.main {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+
+.login {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    width: 600px;
+    height: 400px;
+    align-items: center;
+    box-shadow: 10px 10px 5px 0px rgba(0,0,0,0.17);
+    border-radius: 15px;
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    height: 220px;
+    justify-content: space-evenly;
+    margin: auto;
+    align-items: center;
+}
+
+.title {
+    margin-bottom: 30px;
+    color: rgba(0,0,0,0.7);
+}
+
+.input {
+    border-radius: 10px;
+    width: 150px;
+    border: none;
+    padding: 8px;
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+.buttom {
+    background-color: #0683F9;
+    padding: 6px;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 10px;
+    width: 100%;
+    margin-top: 12px;
+    color: white;
+}
+
+.buttom:active {
+    transform: translateY(-5px);
+    border: none;
+}
+
+.buttom:focus {
+    border: none;
+}

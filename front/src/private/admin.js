@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux';
 
 function PrivateRoute({ component: Component, ...rest }) {
 
-  const user = useSelector(state => state.user.user);
+  const user = useSelector(state => state.auth.user);
 
   return (
     <Route {...rest} render={(props) => (

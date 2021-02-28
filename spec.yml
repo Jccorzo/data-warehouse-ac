@@ -35,6 +35,10 @@ paths:
                 properties:
                   token:
                     type: "string"
+                  email:
+                    type: "string"
+                  admin:
+                    type: "boolean"
         "400":
           description: "username or password incorrect"
           content:
