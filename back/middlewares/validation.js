@@ -1,12 +1,6 @@
 const jwt = require('jsonwebtoken');
 const config = require('../config');
 
-module.exports.headers = (req,res,next) => {
-    res.header("Access-Control-Allow-Origin", "*")
-    res.header("Access-Control-Allow-Headers", "Content-Type, Authorization")
-    next()
-}
-
 module.exports.validateLogin = (req, res, next) => {
     if (req.baseUrl === '/user/login') next()
     else {
@@ -18,7 +12,7 @@ module.exports.validateLogin = (req, res, next) => {
                 return next()
             }
         } catch (e) {
-            res.status(401).json({ mensaje: 'error de autenticacion' })
+            res.status(401).json({ message: 'error de autenticacion' })
         }
     }
 }
@@ -28,5 +22,5 @@ module.exports.validateAdmin = (req, res, next) => {
     const verificarAdmin = jwt.decode(token, config.jwt)
     if (verificarAdmin.administrador) {
         return next()
-    } else res.status(401).json({ mensaje: 'falta de permisos' })
+    } else res.status(401).json({ message: 'falta de permisos' })
 }

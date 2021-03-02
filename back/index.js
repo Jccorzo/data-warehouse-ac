@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const helmet = require('helmet');
 const mongoose = require('mongoose');
+const cors = require('cors');
 const middlewares = require('./middlewares/validation');
 const userRoutes = require('./routes/user');
 const contactRoutes = require('./routes/contact');
@@ -10,11 +11,11 @@ const regionRoutes = require('./routes/region');
 const config = require('./config');
 const app = express();
 
-
 app.use(helmet());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
-app.use('*', middlewares.headers, middlewares.validateLogin);
+app.use(cors())
+app.use('*', middlewares.validateLogin);
 
 mongoose.set('useUnifiedTopology',true);
 

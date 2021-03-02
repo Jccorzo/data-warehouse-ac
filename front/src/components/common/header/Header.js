@@ -11,7 +11,7 @@ const Header = () => {
             <nav className={styles.nav} style={{ display: user ? "block" : "none" }}>
                 <Link to={'/contact'} className={styles.link}>Contactos</Link>
                 <Link to={'/company'} className={styles.link}>Compañias</Link>
-                {user && user.admin && <Link to={'/user'} className={styles.link}>Usuarios</Link>}
+                <Link to={'/user'} className={styles.link}>Usuarios</Link>
                 <Link to={'/region'} className={styles.link}>Region/Ciudad</Link>
             </nav>
         </header>

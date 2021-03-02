@@ -43,7 +43,7 @@ module.exports = (app) => {
         }
     })
 
-    app.get('/user', validateAdmin, async (_, res) => {
+    app.get('/user', async (_, res) => {
         try {
             const users = await userMethods.listAll()
             const usersWithoutPass = users.map(user => {

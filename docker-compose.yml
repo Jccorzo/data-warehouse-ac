@@ -9,3 +9,8 @@ services:
     build: ./back/database
     links:
       - mongodb
+  
+  back:
+    build: ./back
+    depends_on: 
+      - mongodb

@@ -11,6 +11,6 @@ html,
 body,
 #root {
   max-width: 1440px;
-  overflow: hidden;
+  overflow-x: hidden;
   height: 100%;
 }
