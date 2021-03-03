@@ -1,0 +1,22 @@
+.button {
+    background-color: #0683F9;
+    padding: 6px;
+    border: 1px solid rgba(0,0,0,0.1);
+    border-radius: 10px;
+    margin-top: 12px;
+    color: white;
+    width: 146px;
+}
+
+.button:hover {
+    opacity: 0.7;
+}
+
+.button:active {
+    transform: translateY(-5px);
+    border: none;
+}
+
+.button:focus {
+    border: none;
+}

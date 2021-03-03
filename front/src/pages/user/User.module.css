@@ -15,11 +15,30 @@
 }
 
 .row {
-    display: flex;
-    justify-content: space-around;
     border-bottom: 1px solid rgba(0,0,0,0.1);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr) 100px;
+    text-align: center;
 }
 
 .item {
     padding: 8px;
+    text-align: center;
+}
+
+.titleContainer {
+    display: flex;
+    width: 60%;
+    justify-content: space-between;
+    margin: 3% auto;
+}
+
+.actionsContainer {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.action:hover {
+    opacity: 0.5;
+    cursor: pointer;
 }

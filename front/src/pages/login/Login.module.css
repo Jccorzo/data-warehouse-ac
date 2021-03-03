@@ -38,22 +38,3 @@
     padding: 8px;
     border: 1px solid rgba(0,0,0,0.1);
 }
-
-.buttom {
-    background-color: #0683F9;
-    padding: 6px;
-    border: 1px solid rgba(0,0,0,0.1);
-    border-radius: 10px;
-    width: 100%;
-    margin-top: 12px;
-    color: white;
-}
-
-.buttom:active {
-    transform: translateY(-5px);
-    border: none;
-}
-
-.buttom:focus {
-    border: none;
-}

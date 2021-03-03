@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useDispatch } from 'react-redux';
 import styles from './Login.module.css';
 import { signIn } from '../../actions/user';
+import Button from '../../components/common/button/Button';
 
 const LoginPage = () => {
     const dispatch = useDispatch()
@@ -23,7 +24,7 @@ const LoginPage = () => {
                     <h1 className={styles.title}>Bienvenido</h1>
                     <input onChange={onEmailChange} value={email} className={styles.input} placeholder={"Usuario"} type={"text"} />
                     <input onChange={onPasswordChange} value={password} className={styles.input} placeholder={"Contraseña"} type={"password"} />
-                    <input className={styles.buttom} type={"submit"} value={"Ingresar"} />
+                    <Button title={"Ingresar"}/>
                 </form>
             </section>
         </main>
