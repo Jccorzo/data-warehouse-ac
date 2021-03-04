@@ -20,7 +20,7 @@ module.exports.validateLogin = (req, res, next) => {
 module.exports.validateAdmin = (req, res, next) => {
     const token = req.headers.authorization.split(' ')[1];
     const verificarAdmin = jwt.decode(token, config.jwt)
-    if (verificarAdmin.administrador) {
+    if (verificarAdmin.admin) {
         return next()
     } else res.status(401).json({ message: 'falta de permisos' })
 }

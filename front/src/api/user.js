@@ -1,7 +1,7 @@
 import { getItem } from "../util/localStorage"
 
 export const create = async (user) => {
-    const response = await fetch("http://localhost:3001/user", { method: 'POST', body: user })
+    const response = await fetch("http://localhost:3001/user", { method: 'POST', body: JSON.stringify(user), 'Content-Type': 'application/json' })
     const data = await response.json()
     return data
 }
@@ -17,7 +17,7 @@ export const login = async (user) => {
 }
 
 export const update = async (user) => {
-    const response = await fetch("http://localhost:3001/user", { method: 'PUT', body: user })
+    const response = await fetch("http://localhost:3001/user", { method: 'PUT', body: JSON.stringify(user), headers: { 'Content-Type': 'application/json', 'Authorization': "Bearer " + getItem("token") } })
     const data = await response.json()
     return data
 }
@@ -29,7 +29,7 @@ export const get = async () => {
 }
 
 export const remove = async (userId) => {
-    const response = await fetch(`http://localhost:3001/user?userId=${userId}`, { method: 'DELETE' })
+    const response = await fetch(`http://localhost:3001/user?userId=${userId}`, { method: 'DELETE', headers: { 'Content-Type': 'application/json', 'Authorization': "Bearer " + getItem("token") } })
     const data = await response.json()
     return data
 }

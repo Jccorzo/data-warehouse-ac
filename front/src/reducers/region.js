@@ -4,7 +4,7 @@ const regionInitial = {
     regions: []
 }
 
-const regionReducer = (state = regionInitial, { type, region, regions, regionId }) => {
+const regionReducer = (state = regionInitial, { type, region, regions, regionId, countryId, cityId }) => {
     switch (type) {
         case CREATE_REGION:
             return {
@@ -53,10 +53,10 @@ const regionReducer = (state = regionInitial, { type, region, regions, regionId 
             return {
                 ...state,
                 regions: state.regions.map(currentRegion => {
-                    if (currentRegion === region._id) {
+                    if (currentRegion === regionId) {
                         return {
                             ...currentRegion,
-                            countries: currentRegion.countries.filter(currentCountry => currentCountry._id !== region.country._id)
+                            countries: currentRegion.countries.filter(currentCountry => currentCountry._id !== countryId)
                         }
                     } else {
                         return currentRegion
@@ -113,14 +113,14 @@ const regionReducer = (state = regionInitial, { type, region, regions, regionId 
             return {
                 ...state,
                 regions: state.regions.map(currentRegion => {
-                    if (currentRegion === region._id) {
+                    if (currentRegion === regionId) {
                         return {
                             ...currentRegion,
                             countries: currentRegion.countries.map(currentCountry => {
-                                if (currentCountry === region.country._id) {
+                                if (currentCountry === countryId) {
                                     return {
                                         ...currentCountry,
-                                        cities: currentCountry.cities.filter(currentCity => (currentCity._id !== region.country.city._id))
+                                        cities: currentCountry.cities.filter(currentCity => (currentCity._id !== cityId))
                                     }
                                 } else {
                                     return currentCountry
