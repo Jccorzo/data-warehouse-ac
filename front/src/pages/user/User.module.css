@@ -42,3 +42,36 @@
     opacity: 0.5;
     cursor: pointer;
 }
+
+.form {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    background-color: white;
+    align-items: center;
+    padding: 30px 0px;
+    width: 50%;
+}
+
+.input {
+    border-radius: 10px;
+    width: 150px;
+    border: none;
+    padding: 8px;
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+.formTitle {
+    margin-bottom: 30px;
+    color: rgba(0,0,0,0.7);
+}
+
+.inputContainer {
+    display: flex;
+    align-items: center;
+}
+
+.inputContainer > label {
+    margin: 10px ;
+    width: 130px;
+}

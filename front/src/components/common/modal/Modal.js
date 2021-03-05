@@ -1,9 +1,9 @@
 import React from 'react';
 import styles from './Modal.module.css';
 
-const Modal = ({ children }) => {
+const Modal = ({ children, onClick }) => {
     return (
-        <div className={styles.modal}>
+        <div className={styles.modal} onClick={onClick}>
             {children}
         </div>
     )

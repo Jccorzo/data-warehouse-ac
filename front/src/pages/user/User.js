@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import styles from './User.module.css';
 import { useSelector, useDispatch } from 'react-redux';
-import { createUser, deleteUser, getUsers } from '../../actions/user';
+import { createUser, deleteUser, getUsers, updateUser, } from '../../actions/user';
 import Button from '../../components/common/button/Button';
 import Modal from '../../components/common/modal/Modal';
 
@@ -11,6 +11,8 @@ const UserPage = () => {
     const [userList, setUserList] = useState([])
     const [newUser, setNewUser] = useState({ name: '', lastname: '', email: '', password: '', admin: false })
     const [confirmPass, setConfirmPass] = useState('')
+    const [modalVisible, setModalVisible] = useState(false)
+    const [action, setAction] = useState('Crear nuevo usuario')
 
     const handleInputChange = (event) => {
         const target = event.target;
@@ -19,14 +21,23 @@ const UserPage = () => {
         setNewUser(form => { return { ...form, [name]: value } })
     }
 
+    const modalAction = () => setModalVisible(!modalVisible)
+
     const onSubmit = (event) => {
         event.preventDefault()
         if (confirmPass !== newUser.password) {
             alert("Las contraseñas no coinciden")
         } else {
-            dispatch(createUser(newUser))
+            if (action === 'Crear nuevo usuario') {
+                dispatch(createUser(newUser))
+            } else {
+                dispatch(updateUser(newUser))
+            }
+            modalAction()
         }
     }
+
+    const onConfirmPassChange = evt => setConfirmPass(evt.target.value)
 
     useEffect(() => {
         if (users.length > 0) {
@@ -52,7 +63,7 @@ const UserPage = () => {
             <section className={styles.userSection}>
                 <div className={styles.titleContainer}>
                     <h1 className={styles.title}>Usuarios</h1>
-                    <Button title={"Nuevo usuario"} />
+                    <Button title={"Nuevo usuario"} func={modalAction}/>
                 </div>
                 <div className={styles.table}>
                     <div className={styles.row}>
@@ -65,16 +76,38 @@ const UserPage = () => {
                     {userList}
                 </div>
             </section>
-            <Modal>
-                <form onSubmit={onSubmit} className={styles.form}>
-                    <input onChange={handleInputChange} name={"name"} type={"text"} value={newUser.name} />
-                    <input onChange={handleInputChange} name={"lastname"} type={"text"} value={newUser.lastname} />
-                    <input onChange={handleInputChange} name={"email"} type={"text"} value={newUser.email} />
-                    <input onChange={handleInputChange} name={"password"} type={"password"} value={newUser.password} />
-                    {/* <input type={"password"} value={confirmPass} /> */}
-                    <input onChange={handleInputChange} name={"admin"} type={"checkbox"} value={newUser.admin} />
-                </form>
-            </Modal>
+            {modalVisible ?
+                <Modal onClick={modalAction}>
+                    <form onSubmit={onSubmit} className={styles.form}>
+                        <h1 className={styles.formTitle}>{action}</h1>
+                        <div className={styles.inputContainer}>
+                            <label htmlFor={'name'}>Nombre:</label>
+                            <input className={styles.input} onChange={handleInputChange} name={"name"} type={"text"} value={newUser.name} />
+                        </div>
+                        <div className={styles.inputContainer}>
+                            <label htmlFor={'lastname'}>Apellido:</label>
+                            <input className={styles.input} onChange={handleInputChange} name={"lastname"} type={"text"} value={newUser.lastname} />
+                        </div>
+                        <div className={styles.inputContainer}>
+                            <label htmlFor={'email'}>Email:</label>
+                            <input className={styles.input} onChange={handleInputChange} name={"email"} type={"text"} value={newUser.email} />
+                        </div>
+                        <div className={styles.inputContainer}>
+                            <label htmlFor={'admin'}>Administrador:</label>
+                            <input className={styles.input} onChange={handleInputChange} name={"admin"} type={"checkbox"} value={newUser.admin} />
+                        </div>
+                        <div className={styles.inputContainer}>
+                            <label htmlFor={'password'}>Contraseña:</label>
+                            <input className={styles.input} onChange={handleInputChange} name={"password"} type={"password"} value={newUser.password} />
+                        </div>
+                        <div className={styles.inputContainer}>
+                            <label>Repetir contraseña:</label>
+                            <input className={styles.input} onChange={onConfirmPassChange} type={"password"} value={confirmPass} />
+                        </div>
+                        <Button title={'Guardar'} />
+                    </form>
+                </Modal>
+                : null}
         </main>
     )
 }
