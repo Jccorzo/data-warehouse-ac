@@ -1,6 +1,6 @@
 const mongoose = require('mongoose');
 
-const ContactSchema = mongoose.Schema({
+const CompanySchema = mongoose.Schema({
     name: { type: String, required: true },
     address: "string",
     email: "string",
@@ -8,4 +8,4 @@ const ContactSchema = mongoose.Schema({
     city: "string"
 })
 
-module.exports = mongoose.model('Company', ContactSchema)
+module.exports = mongoose.model('Company', CompanySchema)

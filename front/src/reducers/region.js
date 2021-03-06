@@ -132,7 +132,7 @@ const regionReducer = (state = regionInitial, { type, region, regions, regionId,
                     }
                 })
             }
-        default: return regionInitial
+        default: return state
     }
 
 }

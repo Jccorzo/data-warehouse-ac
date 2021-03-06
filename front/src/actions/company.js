@@ -1,10 +1,11 @@
-import { CREATE_COMPANY, DELETE_COMPANY, GET_COMPANIES, UPDATE_COMPANY } from '.';
+import { CREATE_COMPANY, DELETE_COMPANY, GET_COMPANIES, UPDATE_COMPANY } from "./index";
 import * as companyApi from '../api/company';
 
 const createCompanyAction = (company) => ({ type: CREATE_COMPANY, company })
 const updateCompanyAction = (company) => ({ type: UPDATE_COMPANY, company })
 const deleteCompanyAction = (companyId) => ({ type: DELETE_COMPANY, companyId })
 const getCompaniesAction = (companies) => ({ type: GET_COMPANIES, companies })
+
 export const createCompany = (company) =>
     async (dispatch) => {
         try {
@@ -28,8 +29,8 @@ export const updateCompany = (company) =>
 export const getCompanies = () =>
     async (dispatch) => {
         try {
-            const companies = await companyApi.get();
-            dispatch(getCompaniesAction(companies))
+            const data = await companyApi.get();
+            dispatch(getCompaniesAction(data.companies))
         } catch (e) {
             alert(e.message)
         }
@@ -39,6 +40,7 @@ export const deleteCompany = (companyId) =>
     async (dispatch) => {
         try {
             await companyApi.remove(companyId);
+            console.log(companyId)
             dispatch(deleteCompanyAction(companyId))
         } catch (e) {
             alert(e.message)

@@ -5,14 +5,13 @@ import { useSelector } from 'react-redux';
 
 function PrivateRoute({ component: Component, ...rest }) {
 
-    const user = useSelector(state => state.auth.user);
-  
-    return (
-      <Route {...rest} render={(props) => (
-        user ? <Component {...props} /> : <Redirect to='/' />
-      )}
-      />
-    );
-  }
+  const user = useSelector(state => state.auth.user);
+  return (
+    <Route {...rest} render={(props) => (
+      user ? <Component {...props} /> : <Redirect to='/' />
+    )}
+    />
+  );
+}
 
 export default PrivateRoute;

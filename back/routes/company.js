@@ -6,7 +6,7 @@ module.exports = (app) => {
         const company = req.body;
         try {
             const newCompany = await companyServices.createCompany(company);
-            res.status(201).json({ newCompany, message: "Compañia creada correctamente" })
+            res.status(201).json({ ...newCompany._doc })
         } catch (e) {
             res.status(400).json({ message: "Ocurrió un error creando la compañía" })
         }

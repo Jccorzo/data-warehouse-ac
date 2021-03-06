@@ -6,7 +6,7 @@ module.exports = (app) => {
         const contact = req.body;
         try {
             const newContact = await contactServices.createContact(contact)
-            res.json({ newContact, message: "Contacto creado correctamente" })
+            res.json({ ...newContact._doc })
         } catch (e) {
             res.status(400).json({ message: 'Ocurrió un error creando el contacto' })
         }

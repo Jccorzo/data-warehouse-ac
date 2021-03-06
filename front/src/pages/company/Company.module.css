@@ -1,0 +1,78 @@
+.main {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.table {
+    width: 60%;
+    border: 1px solid rgba(0,0,0,0.1);
+    margin: auto;
+}
+
+.header {
+    font-weight: bold;
+}
+
+.row {
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    display: grid;
+    grid-template-columns: repeat(5, 1fr) 100px;
+    text-align: center;
+}
+
+.item {
+    padding: 8px;
+    text-align: center;
+}
+
+.titleContainer {
+    display: flex;
+    width: 60%;
+    justify-content: space-between;
+    margin: 3% auto;
+}
+
+.actionsContainer {
+    display: flex;
+    justify-content: space-evenly;
+}
+
+.action:hover {
+    opacity: 0.5;
+    cursor: pointer;
+}
+
+.form {
+    display: flex;
+    flex-direction: column;
+    margin: auto;
+    background-color: white;
+    align-items: center;
+    padding: 30px 0px;
+    width: 50%;
+    position: relative;
+}
+
+.input {
+    border-radius: 10px;
+    width: 150px;
+    border: none;
+    padding: 8px;
+    border: 1px solid rgba(0,0,0,0.1);
+}
+
+.formTitle {
+    margin-bottom: 30px;
+    color: rgba(0,0,0,0.7);
+}
+
+.inputContainer {
+    display: flex;
+    align-items: center;
+}
+
+.inputContainer > label {
+    margin: 10px ;
+    width: 130px;
+}

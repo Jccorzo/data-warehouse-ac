@@ -1,4 +1,4 @@
-import { CREATE_USER, DELETE_USER, GET_USERS, LOGIN, UPDATE_USER } from "../actions";
+import { CREATE_USER, DELETE_USER, GET_USERS, LOGIN, UPDATE_USER } from "../actions/index";
 
 const userInitial = {
     users: [],
@@ -32,7 +32,7 @@ const userReducer = (state = userInitial, { type, user, userId, users }) => {
                 ...state,
                 users: users
             }
-        default: return userInitial
+        default: return state
     }
 }
 

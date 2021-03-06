@@ -6,7 +6,7 @@ module.exports = (app) => {
         const region = req.body;
         try {
             const newRegion = await regionServices.createRegion(region);
-            res.json({ newRegion })
+            res.json({ ...newRegion._doc })
         } catch (e) {
             res.status(400).json({ message: "Ocurrió un error creando la región" })
         }

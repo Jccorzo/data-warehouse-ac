@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import styles from './User.module.css';
 import { useSelector, useDispatch } from 'react-redux';
 import { createUser, deleteUser, getUsers, updateUser, } from '../../actions/user';
@@ -10,7 +10,6 @@ const initUser = () => ({ name: '', lastname: '', email: '', password: '', admin
 const UserPage = () => {
     const dispatch = useDispatch()
     const { users, user } = useSelector(state => state.auth)
-    const [userList, setUserList] = useState([])
     const [newUser, setNewUser] = useState(initUser())
     const [confirmPass, setConfirmPass] = useState('')
     const [modalVisible, setModalVisible] = useState(false)
@@ -47,20 +46,16 @@ const UserPage = () => {
         modalAction()
     }
 
-    useEffect(() => {
-        if (users.length > 0) {
-            setUserList(users.map(userS => {
-                return (
-                    <div key={userS._id} className={styles.row}><div className={styles.item}>{userS.name}</div>
-                        <div className={styles.item}>{userS.lastname}</div>
-                        <div className={styles.item}>{userS.email}</div>
-                        <div className={styles.item}>{userS.admin ? "Admin" : "Básico"}</div>
-                        <div className={`${styles.item} ${styles.actionsContainer}`}>{user.admin ? <><i className={`fa fa-trash ${styles.action}`} onClick={() => dispatch(deleteUser(userS._id))}></i> <i className={`fa fa-pencil ${styles.action}`} onClick={() => changeToUpdateUser(userS)}></i></> : "-"}</div>
-                    </div>)
-            }
-            ))
-        }
-    }, [users])
+    const userList = useMemo(() =>
+        users.map(userS => (
+            <div key={userS._id} className={styles.row}><div className={styles.item}>{userS.name}</div>
+                <div className={styles.item}>{userS.lastname}</div>
+                <div className={styles.item}>{userS.email}</div>
+                <div className={styles.item}>{userS.admin ? "Admin" : "Básico"}</div>
+                <div className={`${styles.item} ${styles.actionsContainer}`}>{user.admin ? <><i className={`fa fa-trash ${styles.action}`} onClick={() => dispatch(deleteUser(userS._id))}></i> <i className={`fa fa-pencil ${styles.action}`} onClick={() => changeToUpdateUser(userS)}></i></> : "-"}</div>
+            </div>)
+
+        ), [users])
 
     useEffect(() => {
         dispatch(getUsers())

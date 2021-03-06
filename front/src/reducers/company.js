@@ -1,4 +1,4 @@
-import { CREATE_COMPANY, DELETE_COMPANY, GET_COMPANIES, UPDATE_COMPANY } from "../actions";
+import { CREATE_COMPANY, DELETE_COMPANY, GET_COMPANIES, UPDATE_COMPANY } from "../actions/index";
 
 const companyInitial = {
     companies: []
@@ -17,6 +17,7 @@ const companyReducer = (state = companyInitial, { type, company, companyId, comp
                 companies: state.companies.map(currentCompany => (currentCompany._id === company._id ? company : currentCompany))
             }
         case DELETE_COMPANY:
+            console.log(state.companies.filter(currentCompany => currentCompany._id !== companyId))
             return {
                 ...state,
                 companies: state.companies.filter(currentCompany => currentCompany._id !== companyId)
@@ -26,7 +27,7 @@ const companyReducer = (state = companyInitial, { type, company, companyId, comp
                 ...state,
                 companies: companies
             }
-        default: return companyInitial
+        default: return state
     }
 }
 

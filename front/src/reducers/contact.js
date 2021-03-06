@@ -1,4 +1,4 @@
-import { CREATE_CONTACT, DELETE_CONTACT, GET_CONTACTS, UPDATE_CONTACT } from "../actions";
+import { CREATE_CONTACT, DELETE_CONTACT, GET_CONTACTS, UPDATE_CONTACT } from "../actions/index";
 
 const contactInitial = {
     contacts: []
@@ -26,7 +26,7 @@ const contactReducer = (state = contactInitial, { type, contact, contactId, cont
                 ...state,
                 contacts: contacts
             }
-        default: return contactInitial
+        default: return state
     }
 }
 
