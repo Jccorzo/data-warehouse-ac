@@ -15,14 +15,14 @@ const userReducer = (state = userInitial, { type, user, userId, users }) => {
         case CREATE_USER:
             return {
                 ...state,
-                users: [user, ...state.users]
+                users: [...state.users, user]
             }
         case UPDATE_USER:
             return {
                 ...state,
                 users: state.users.map(currentUser => (currentUser._id === user._id ? user : currentUser))
             }
-        case DELETE_USER: 
+        case DELETE_USER:
             return {
                 ...state,
                 users: state.users.filter(currentUser => currentUser._id !== userId)

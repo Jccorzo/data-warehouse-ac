@@ -1,7 +1,7 @@
 import { getItem } from "../util/localStorage"
 
 export const create = async (user) => {
-    const response = await fetch("http://localhost:3001/user", { method: 'POST', body: JSON.stringify(user), 'Content-Type': 'application/json' })
+    const response = await fetch("http://localhost:3001/user", { method: 'POST', body: JSON.stringify(user), headers: { 'Content-Type': 'application/json', 'Authorization': "Bearer " + getItem("token") } })
     const data = await response.json()
     return data
 }

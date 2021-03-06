@@ -5,12 +5,16 @@ const config = require('../config');
 
 exports.create = async (user) => {
     const securePass = crypto.createHash('md5').update(user.password).digest('hex');
-    await User.create({ ...user, password: securePass })
+    return await User.create({ ...user, password: securePass })
 }
 
 exports.listAll = () => User.find()
 
-exports.update = (user) => User.findByIdAndUpdate(user._id, user)
+exports.update = async (user) => {
+    const securePass = crypto.createHash('md5').update(user.password).digest('hex');
+    await User.findByIdAndUpdate(user._id, { ...user, password: securePass })
+}
+
 
 
 exports.remove = (userId) => {

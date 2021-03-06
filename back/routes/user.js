@@ -6,8 +6,8 @@ module.exports = (app) => {
     app.post('/user', validateAdmin, async (req, res) => {
         const user = req.body;
         try {
-            await userMethods.create(user)
-            res.status(201).json({ message: 'Usuario creado correctamente' })
+            const newUser = await userMethods.create(user)
+            res.status(201).json({ ...newUser._doc })
         } catch (e) {
             res.status(400).json(e.message)
         }

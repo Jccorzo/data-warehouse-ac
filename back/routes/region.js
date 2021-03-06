@@ -47,7 +47,6 @@ module.exports = (app) => {
             await regionServices.updateCountry(region);
             res.json({ message: "País actualizado exitosamente" })
         } catch (e) {
-            console.log(e)
             res.status(400).json({ message: "Ocurrió un error creando el país" })
         }
     })
@@ -68,7 +67,6 @@ module.exports = (app) => {
             await regionServices.createCity(region);
             res.json({ message: "Ciudad creada exitosamente" })
         } catch (e) {
-            console.log(e)
             res.status(400).json({ message: "Ocurrió un error creando la ciudad" })
         }
     })
