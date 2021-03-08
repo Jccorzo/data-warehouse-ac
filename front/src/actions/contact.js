@@ -29,8 +29,8 @@ export const updateCompany = (contact) =>
 export const getContacts = () =>
     async (dispatch) => {
         try {
-            const contacts = await contactApi.get();
-            dispatch(getContactsAction(contacts))
+            const data = await contactApi.get();
+            dispatch(getContactsAction(data.contacts))
         } catch (e) {
             alert(e.message)
         }

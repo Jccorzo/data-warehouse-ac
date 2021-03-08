@@ -36,8 +36,8 @@ export const deleteRegion = (regionId) =>
 export const getRegions = () =>
     async (dispatch) => {
         try {
-            const regions = await regionApi.get();
-            dispatch(getRegionsAction(regions))
+            const data = await regionApi.get();
+            dispatch(getRegionsAction(data.regions))
         } catch (e) {
             alert(e.message)
         }
