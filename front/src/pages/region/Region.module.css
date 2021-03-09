@@ -1,40 +1,70 @@
 .main {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    padding: 0px 200px 0px 100px;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  padding: 0px 200px 0px 300px;
 }
 
 .form {
-    display: flex;
-    flex-direction: column;
-    margin: auto;
-    background-color: white;
-    align-items: center;
-    padding: 30px 0px;
-    width: 50%;
-    position: relative;
+  display: flex;
+  flex-direction: column;
+  margin: auto;
+  background-color: white;
+  align-items: center;
+  padding: 30px 0px;
+  width: 50%;
+  position: relative;
 }
 
 .input {
-    border-radius: 10px;
-    width: 150px;
-    border: none;
-    padding: 8px;
-    border: 1px solid rgba(0,0,0,0.1);
+  border-radius: 10px;
+  width: 150px;
+  border: none;
+  padding: 8px;
+  border: 1px solid rgba(0, 0, 0, 0.1);
 }
 
 .formTitle {
-    margin-bottom: 30px;
-    color: rgba(0,0,0,0.7);
+  margin-bottom: 30px;
+  color: rgba(0, 0, 0, 0.7);
 }
 
 .inputContainer {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .inputContainer > label {
-    margin: 10px ;
-    width: 130px;
+  margin: 10px;
+  width: 130px;
+}
+
+ul {
+  list-style: none;
+}
+
+.nameWithButton {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.countryButtonsContainer {
+  display: flex;
+  justify-content: space-between;
+}
+
+.countryButtons {
+  display: flex;
+  align-items: center;
+}
+
+.action {
+    color: rgba(0,0,0,0.1);
+    width: 25px;
+}
+
+.action:hover {
+  opacity: 0.5;
+  cursor: pointer;
 }

@@ -13,7 +13,7 @@ export const deleteRegion = async (regionId) => {
 }
 
 export const get = async () => {
-    const response = await fetch("http://localhost:3001/region", { headers: { 'Content-Type': 'application/json', 'Authorization': "Bearer " + getItem("token") }})
+    const response = await fetch("http://localhost:3001/region", { headers: { 'Content-Type': 'application/json', 'Authorization': "Bearer " + getItem("token") } })
     const data = await response.json()
     return data
 }
