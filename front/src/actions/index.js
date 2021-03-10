@@ -11,6 +11,7 @@ export const GET_CONTACTS = "getContacts";
 export const CREATE_REGION = "createRegion";
 export const DELETE_REGION = "deleteRegion";
 export const GET_REGIONS = "getRegions";
+export const UPDATE_REGION = "updateRegions";
 export const CREATE_COUNTRY = "createCountry";
 export const UPDATE_COUNTRY = "updateCountry";
 export const DELETE_COUNTRY = "deleteCountry";

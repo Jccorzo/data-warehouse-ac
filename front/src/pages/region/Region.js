@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { createCity, createCountry, createRegion, deleteCity, deleteCountry, getRegions } from '../../actions/region';
+import { createCity, createCountry, createRegion, deleteCity, deleteCountry, deleteRegion, getRegions, updateCity, updateCountry, updateRegion } from '../../actions/region';
 import Button from '../../components/common/button/Button';
 import styles from './Region.module.css';
 import Modal from '../../components/common/modal/Modal';
@@ -15,16 +15,39 @@ const RegionPage = () => {
     const [regionAction, setRegionAction] = useState('Nueva región')
     const [regionToEdit, setRegionToEdit] = useState(null)
 
+    const changeToNewRegion = () => {
+        setModalRegion(true)
+        setRegionAction('Nueva región')
+    }
+
+    const changeToUpdateRegion = (region) => {
+        setModalRegion(true)
+        setRegionAction('Editar región')
+        setRegionToEdit(region)
+    }
+
     const changeToNewCountry = (regionId) => {
         setModalRegion(true)
         setRegionAction('Nuevo país')
         setRegionToEdit({ _id: regionId })
     }
 
+    const changeToUpdateCountry = (regionId, countryId) => {
+        setModalRegion(true)
+        setRegionAction('Editar país')
+        setRegionToEdit({ _id: regionId, country: { _id: countryId } })
+    }
+
     const changeToNewCity = (regionId, countryId) => {
         setModalRegion(true)
         setRegionAction('Nueva ciudad')
         setRegionToEdit({ _id: regionId, country: { _id: countryId } })
+    }
+
+    const changeToUpdateCity = (regionId, countryId, cityId) => {
+        setModalRegion(true)
+        setRegionAction('Editar ciudad')
+        setRegionToEdit({ _id: regionId, country: { _id: countryId, city: { _id: cityId } } })
     }
 
     const submitRegion = (event) => {
@@ -35,6 +58,12 @@ const RegionPage = () => {
             dispatch(createCountry({ ...regionToEdit, country: { name: name } }))
         } else if (regionAction === 'Nueva ciudad') {
             dispatch(createCity({ ...regionToEdit, country: { ...regionToEdit.country, city: { name: name, code: name.toLowerCase().slice(0, 3) } } }))
+        } else if (regionAction === 'Editar región') {
+            dispatch(updateRegion({ ...regionToEdit, name: name }))
+        } else if (regionAction === 'Editar país') {
+            dispatch(updateCountry({ _id: regionToEdit._id, country: { _id: regionToEdit.country._id, name: name } }))
+        } else if (regionAction === 'Editar ciudad') {
+            dispatch(updateCity({ _id: regionToEdit._id, country: { _id: regionToEdit.country._id, city: { _id: regionToEdit.country.city._id, name: name, code: name.toLowerCase().slice(0, 3) } } }))
         }
         setName('')
         setModalRegion(false)
@@ -44,46 +73,50 @@ const RegionPage = () => {
 
     const regionsList = useMemo(() => (
         regions.map(region => (
-            <ul key={region._id}>
-                <li>
-                    <div className={styles.nameWithButton}>
-                        <p>{region.name}</p>
-                        <Button title={'Añadir país'} func={() => changeToNewCountry(region._id)} />
+            <li key={region._id} style={{ margin: '20px 0' }}>
+                <div className={styles.nameWithButton} style={{ margin: '10px 0' }}>
+                    <div className={styles.countryButtons}>
+                        <p className={styles.regionP}>{region.name}</p>
+                        <Button style={{ width: 'max-content', backgroundColor: 'white', margin: '0px 5px 0px 20px', color: '#0683F9' }} title={'Editar'} func={() => changeToUpdateRegion(region)} />
+                        <Button style={{ width: 'max-content', backgroundColor: 'red', margin: '0px 10px', color: 'white' }} title={'Eliminar'} func={() => dispatch(deleteRegion(region._id))} />
                     </div>
-                    {region.countries.map(country => (
-                        <div>
-                            <div className={styles.countryButtonsContainer}>
-                                <div className={styles.countryButtons}>
-                                    <p>{country.name}</p>
-                                    <Button style={{ width: 'max-content', backgroundColor: 'white', margin: '0px 5px 0px 20px', color: '#0683F9' }} title={'Editar'} />
-                                    <Button style={{ width: 'max-content', backgroundColor: 'red', margin: '0px 10px', color: 'white' }} title={'Eliminar'} func={() => dispatch(deleteCountry(region._id, country._id))} />
-                                </div>
-                                <Button title={'Añadir ciudad'} func={() => changeToNewCity(region._id, country._id)} />
+                    <Button title={'Añadir país'} style={{ opacity: 0.8 }} func={() => changeToNewCountry(region._id)} />
+                </div>
+                {region.countries.map(country => (
+                    <div style={{ marginLeft: 40 }} key={country._id}>
+                        <div className={styles.countryButtonsContainer} style={{ margin: '10px 0 ' }}>
+                            <div className={styles.countryButtons}>
+                                <p className={styles.countryP}>{country.name}</p>
+                                <Button style={{ width: 'max-content', backgroundColor: 'white', margin: '0px 5px 0px 20px', color: '#0683F9' }} title={'Editar'} func={() => changeToUpdateCountry(region._id, country._id)} />
+                                <Button style={{ width: 'max-content', backgroundColor: 'red', margin: '0px 10px', color: 'white' }} title={'Eliminar'} func={() => dispatch(deleteCountry(region._id, country._id))} />
                             </div>
-                            {country.cities.map(city => (
-                                <div className={styles.countryButtons}>
-                                    <p>{city.name}</p>
-                                    <Button style={{ width: 'max-content', backgroundColor: 'white', margin: '0px 5px 0px 20px', color: '#0683F9' }} title={'Editar'} />
-                                    <Button style={{ width: 'max-content', backgroundColor: 'red', margin: '0px 10px', color: 'white' }} title={'Eliminar'} func={() => dispatch(deleteCity(region._id, country._id, city._id))} />
-                                </div>
-                            ))}
+                            <Button title={'Añadir ciudad'} style={{ opacity: 0.5 }} func={() => changeToNewCity(region._id, country._id)} />
                         </div>
-                    ))}
-                </li>
-            </ul>
+                        {country.cities.map(city => (
+                            <div style={{ marginLeft: 40 }} key={city._id} className={styles.countryButtons}>
+                                <p>{city.name}</p>
+                                <Button style={{ width: 'max-content', backgroundColor: 'white', margin: '0px 5px 0px 20px', color: '#0683F9' }} title={'Editar'} func={() => changeToUpdateCity(region._id, country._id, city._id)} />
+                                <Button style={{ width: 'max-content', backgroundColor: 'red', margin: '0px 10px', color: 'white' }} title={'Eliminar'} func={() => dispatch(deleteCity(region._id, country._id, city._id))} />
+                            </div>
+                        ))}
+                    </div>
+                ))}
+            </li>
         ))
     ), [regions])
 
     useEffect(() => {
         dispatch(getRegions())
-    })
+    }, [])
 
     return (
         <main className={styles.main}>
             <div style={{ alignSelf: 'flex-end' }}>
-                <Button title={'Agregar región'} func={() => setModalRegion(true)} />
+                <Button title={'Agregar región'} func={changeToNewRegion} />
             </div>
-            {regionsList}
+            <ul>
+                {regionsList}
+            </ul>
             <Modal visible={modalRegion}>
                 <form onSubmit={submitRegion} className={styles.form}>
                     <h1 className={styles.formTitle}>{regionAction}</h1>

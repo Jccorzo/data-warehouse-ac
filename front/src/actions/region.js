@@ -1,9 +1,10 @@
-import { CREATE_CITY, CREATE_COUNTRY, CREATE_REGION, DELETE_CITY, DELETE_COUNTRY, DELETE_REGION, GET_REGIONS, UPDATE_CITY, UPDATE_COUNTRY } from '.';
+import { CREATE_CITY, CREATE_COUNTRY, CREATE_REGION, DELETE_CITY, DELETE_COUNTRY, DELETE_REGION, GET_REGIONS, UPDATE_REGION, UPDATE_CITY, UPDATE_COUNTRY } from '.';
 import * as regionApi from '../api/region';
 
 const createRegionAction = (region) => ({ type: CREATE_REGION, region })
 const deleteRegionAction = (regionId) => ({ type: DELETE_REGION, regionId })
 const getRegionsAction = (regions) => ({ type: GET_REGIONS, regions })
+const updateRegionAction = (region) => ({ type: UPDATE_REGION, region })
 
 const createCountryAction = (region) => ({ type: CREATE_COUNTRY, region })
 const updateCountryAction = (region) => ({ type: UPDATE_COUNTRY, region })
@@ -38,6 +39,16 @@ export const getRegions = () =>
         try {
             const data = await regionApi.get();
             dispatch(getRegionsAction(data.regions))
+        } catch (e) {
+            alert(e.message)
+        }
+    }
+
+export const updateRegion = (region) =>
+    async (dispatch) => {
+        try {
+            await regionApi.updateRegion(region)
+            dispatch(updateRegionAction(region))
         } catch (e) {
             alert(e.message)
         }

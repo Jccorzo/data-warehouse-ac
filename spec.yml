@@ -114,7 +114,7 @@ paths:
                   admin: 
                     type: "boolean"
         responses:
-          "201":
+          "200":
             description: "User updated"
             content:
               application/json:
@@ -654,6 +654,43 @@ paths:
                 properties:
                   message:
                     type: "string"
+    put:
+        security:
+          - bearerAuth: []
+        summary: "Update region"
+        requestBody: 
+          content: 
+            application/json:
+              schema:
+                type: "object"
+                properties: 
+                  _id: 
+                    type: "string"
+                  name:
+                    type: "string"
+                  countries:
+                    type: "array"
+                    items:
+                      type: "object"
+        responses:
+          "200":
+            description: "User updated"
+            content:
+              application/json:
+                schema:
+                  type: "object"
+                  properties:
+                    message: 
+                      type: "string"
+          "400":
+            description: "User exist"
+            content:
+              application/json:
+                schema:
+                  type: "object"
+                  properties:
+                    message:
+                      type: "string"
     delete:
         security:
           - bearerAuth: []

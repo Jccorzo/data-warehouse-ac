@@ -12,6 +12,16 @@ module.exports = (app) => {
         }
     })
 
+    app.put('/region', async (req, res) => {
+        const region = req.body;
+        try {
+            await regionServices.updateRegion(region);
+            res.json({ message: "Región actualizada correctamente" })
+        } catch (e) {
+            res.status(400).json({ message: "Ocurrió un error creando la región" })
+        }
+    })
+
     app.delete('/region', async (req, res) => {
         const regionId = req.query.regionId;
         try {
@@ -37,6 +47,7 @@ module.exports = (app) => {
             const updateRegion = await regionServices.createCountry(region);
             res.json({ updateRegion })
         } catch (e) {
+            console.log(e)
             res.status(400).json({ message: "Ocurrió un error creando la región" })
         }
     })

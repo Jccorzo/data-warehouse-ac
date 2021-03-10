@@ -9,7 +9,7 @@ const companyReducer = (state = companyInitial, { type, company, companyId, comp
         case CREATE_COMPANY:
             return {
                 ...state,
-                companies: [company, ...state.companies]
+                companies: [...state.companies, company]
             }
         case UPDATE_COMPANY:
             return {

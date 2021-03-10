@@ -9,7 +9,7 @@ const contactReducer = (state = contactInitial, { type, contact, contactId, cont
         case CREATE_CONTACT:
             return {
                 ...state,
-                contacts: [contact, ...state.contacts]
+                contacts: [...state.contacts, contact]
             }
         case UPDATE_CONTACT:
             return {

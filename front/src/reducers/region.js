@@ -1,4 +1,4 @@
-import { CREATE_CITY, CREATE_COUNTRY, CREATE_REGION, DELETE_CITY, DELETE_COUNTRY, DELETE_REGION, GET_REGIONS, UPDATE_CITY, UPDATE_COUNTRY } from "../actions";
+import { CREATE_CITY, CREATE_COUNTRY, CREATE_REGION, DELETE_CITY, DELETE_COUNTRY, DELETE_REGION, GET_REGIONS, UPDATE_CITY, UPDATE_COUNTRY, UPDATE_REGION } from "../actions";
 
 const regionInitial = {
     regions: []
@@ -9,7 +9,12 @@ const regionReducer = (state = regionInitial, { type, region, regions, regionId,
         case CREATE_REGION:
             return {
                 ...state,
-                regions: [region, ...state.regions]
+                regions: [...state.regions, region]
+            }
+        case UPDATE_REGION:
+            return {
+                ...state,
+                regions: state.regions.map((currentRegion) => (currentRegion._id === region._id ? { ...currentRegion, name: region.name } : currentRegion))
             }
         case DELETE_REGION:
             return {
@@ -39,10 +44,10 @@ const regionReducer = (state = regionInitial, { type, region, regions, regionId,
             return {
                 ...state,
                 regions: state.regions.map(currentRegion => {
-                    if (currentRegion === region._id) {
+                    if (currentRegion._id === region._id) {
                         return {
                             ...currentRegion,
-                            countries: currentRegion.countries.map(currentCountry => (currentCountry._id === region.country._id ? region.country : currentCountry))
+                            countries: currentRegion.countries.map(currentCountry => (currentCountry._id === region.country._id ? { ...currentCountry, name: region.country.name } : currentCountry))
                         }
                     } else {
                         return currentRegion
@@ -53,7 +58,7 @@ const regionReducer = (state = regionInitial, { type, region, regions, regionId,
             return {
                 ...state,
                 regions: state.regions.map(currentRegion => {
-                    if (currentRegion === regionId) {
+                    if (currentRegion._id === regionId) {
                         return {
                             ...currentRegion,
                             countries: currentRegion.countries.filter(currentCountry => currentCountry._id !== countryId)
@@ -67,7 +72,7 @@ const regionReducer = (state = regionInitial, { type, region, regions, regionId,
             return {
                 ...state,
                 regions: state.regions.map(currentRegion => {
-                    if (currentRegion === region._id) {
+                    if (currentRegion._id === region._id) {
                         return {
                             ...currentRegion,
                             countries: currentRegion.countries.map(currentCountry => {
@@ -90,14 +95,14 @@ const regionReducer = (state = regionInitial, { type, region, regions, regionId,
             return {
                 ...state,
                 regions: state.regions.map(currentRegion => {
-                    if (currentRegion === region._id) {
+                    if (currentRegion._id === region._id) {
                         return {
                             ...currentRegion,
                             countries: currentRegion.countries.map(currentCountry => {
-                                if (currentCountry === region.country._id) {
+                                if (currentCountry._id === region.country._id) {
                                     return {
                                         ...currentCountry,
-                                        cities: currentCountry.cities.map(currentCity => (currentCity._id === region.country.city._id ? region.country.city : currentCity))
+                                        cities: currentCountry.cities.map(currentCity => (currentCity._id === region.country.city._id ? { ...currentCity, name: region.country.city.name } : currentCity))
                                     }
                                 } else {
                                     return currentCountry
@@ -113,11 +118,11 @@ const regionReducer = (state = regionInitial, { type, region, regions, regionId,
             return {
                 ...state,
                 regions: state.regions.map(currentRegion => {
-                    if (currentRegion === regionId) {
+                    if (currentRegion._id === regionId) {
                         return {
                             ...currentRegion,
                             countries: currentRegion.countries.map(currentCountry => {
-                                if (currentCountry === countryId) {
+                                if (currentCountry._id === countryId) {
                                     return {
                                         ...currentCountry,
                                         cities: currentCountry.cities.filter(currentCity => (currentCity._id !== cityId))

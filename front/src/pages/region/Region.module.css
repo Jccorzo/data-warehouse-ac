@@ -40,7 +40,7 @@
 }
 
 ul {
-  list-style: none;
+  list-style: disc;
 }
 
 .nameWithButton {
@@ -67,4 +67,13 @@ ul {
 .action:hover {
   opacity: 0.5;
   cursor: pointer;
+}
+
+
+.regionP {
+  font-size: 20px;
+}
+
+.countryP {
+  font-size: 18px;
 }
