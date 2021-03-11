@@ -9,6 +9,7 @@ const initCompany = () => ({ name: '', address: '', email: '', phone: '', city: 
 
 const CompanyPage = () => {
     const dispatch = useDispatch()
+    const regions = useSelector(state => state.region.regions)
     const companies = useSelector(state => state.company.companies)
     const [newCompany, setNewCompany] = useState(initCompany())
     const [modalVisible, setModalVisible] = useState(false)
@@ -59,6 +60,27 @@ const CompanyPage = () => {
         dispatch(getCompanies())
     }, [])
 
+    const cities = useMemo(() => {
+        if (regions.length > 0) {
+            const cities2 = regions.reduce((previous, current) => {
+                const cities1 = []
+                if (current.countries.length > 0) {
+                    current.countries.forEach((country) => {
+                        if (country.cities.length > 0) {
+                            const y = country.cities
+                            const x = [].concat(y)
+                            const u = cities1.push(...x)
+                        }
+                    })
+                }
+                return [...previous, ...cities1]
+            }, [])
+            return cities2
+        } else {
+            return []
+        }
+    }, [])
+
     return (
         <main className={styles.name}>
             <section className={styles.userSection}>
@@ -75,7 +97,7 @@ const CompanyPage = () => {
                         <div className={`${styles.item} ${styles.header}`}>Ciudad</div>
                         <div className={`${styles.item} ${styles.header}`}>Acciones</div>
                     </div>
-                    {companiesList}
+                    {companiesList.length > 0 ? companiesList : <div className={styles.empty}>No hay Compañías creadas</div>}
                 </div>
             </section>
             <Modal visible={modalVisible}>
@@ -100,7 +122,9 @@ const CompanyPage = () => {
                     </div>
                     <div className={styles.inputContainer}>
                         <label htmlFor={'city'}>Ciudad:</label>
-                        <input required={true} className={styles.input} onChange={handleInputChange} name={"city"} type={"text"} value={newCompany.city} />
+                        <select className={styles.input} required={true}>
+                            {cities.map(city => <option value={city.name}>{city.name}</option>)}
+                        </select>
                     </div>
                     <Button title={'Guardar'} />
                 </form>

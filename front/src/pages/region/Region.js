@@ -93,8 +93,8 @@ const RegionPage = () => {
                             <Button title={'Añadir ciudad'} style={{ opacity: 0.5 }} func={() => changeToNewCity(region._id, country._id)} />
                         </div>
                         {country.cities.map(city => (
-                            <div style={{ marginLeft: 40 }} key={city._id} className={styles.countryButtons}>
-                                <p>{city.name}</p>
+                            <div style={{ margin: '10px 40px' }} key={city._id} className={styles.countryButtons}>
+                                <p className={styles.cityP}>{city.name}</p>
                                 <Button style={{ width: 'max-content', backgroundColor: 'white', margin: '0px 5px 0px 20px', color: '#0683F9' }} title={'Editar'} func={() => changeToUpdateCity(region._id, country._id, city._id)} />
                                 <Button style={{ width: 'max-content', backgroundColor: 'red', margin: '0px 10px', color: 'white' }} title={'Eliminar'} func={() => dispatch(deleteCity(region._id, country._id, city._id))} />
                             </div>
@@ -111,11 +111,12 @@ const RegionPage = () => {
 
     return (
         <main className={styles.main}>
-            <div style={{ alignSelf: 'flex-end' }}>
+            <div className={styles.titleContainer}>
+                <h1 className={styles.title}>Regiones</h1>
                 <Button title={'Agregar región'} func={changeToNewRegion} />
             </div>
             <ul>
-                {regionsList}
+                {regionsList.length > 0 ? regionsList : <div className={styles.empty}>No hay Regiones creadas</div>}
             </ul>
             <Modal visible={modalRegion}>
                 <form onSubmit={submitRegion} className={styles.form}>

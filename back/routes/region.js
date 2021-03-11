@@ -45,7 +45,7 @@ module.exports = (app) => {
         const region = req.body;
         try {
             const updateRegion = await regionServices.createCountry(region);
-            res.json({ updateRegion })
+            res.json({ ...updateRegion._doc })
         } catch (e) {
             console.log(e)
             res.status(400).json({ message: "Ocurrió un error creando la región" })
@@ -75,8 +75,8 @@ module.exports = (app) => {
     app.post('/region/country/city', async (req, res) => {
         const region = req.body;
         try {
-            await regionServices.createCity(region);
-            res.json({ message: "Ciudad creada exitosamente" })
+            const newCity = await regionServices.createCity(region);
+            res.json({ ...newCity._doc })
         } catch (e) {
             res.status(400).json({ message: "Ocurrió un error creando la ciudad" })
         }

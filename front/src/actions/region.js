@@ -57,8 +57,8 @@ export const updateRegion = (region) =>
 export const createCountry = (region) =>
     async (dispatch) => {
         try {
-            const newCountry = await regionApi.createCountry(region);
-            dispatch(createCountryAction(newCountry))
+            const regionUpdated = await regionApi.createCountry(region);
+            dispatch(createCountryAction(regionUpdated))
         } catch (e) {
             alert(e.message)
         }

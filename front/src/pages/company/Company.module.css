@@ -76,3 +76,8 @@
     margin: 10px ;
     width: 130px;
 }
+
+.empty {
+    display: flex;
+    justify-content: center;
+}

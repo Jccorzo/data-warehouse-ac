@@ -29,16 +29,7 @@ const regionReducer = (state = regionInitial, { type, region, regions, regionId,
         case CREATE_COUNTRY:
             return {
                 ...state,
-                regions: state.regions.map(currentRegion => {
-                    if (currentRegion === region._id) {
-                        return {
-                            ...currentRegion,
-                            countries: [region.country, ...currentRegion.countries]
-                        }
-                    } else {
-                        return currentRegion
-                    }
-                })
+                regions: state.regions.map((currentRegion) => (currentRegion._id === region._id ? region : currentRegion))
             }
         case UPDATE_COUNTRY:
             return {
@@ -71,25 +62,7 @@ const regionReducer = (state = regionInitial, { type, region, regions, regionId,
         case CREATE_CITY:
             return {
                 ...state,
-                regions: state.regions.map(currentRegion => {
-                    if (currentRegion._id === region._id) {
-                        return {
-                            ...currentRegion,
-                            countries: currentRegion.countries.map(currentCountry => {
-                                if (currentCountry === region.country._id) {
-                                    return {
-                                        ...currentCountry,
-                                        cities: [region.country.city, ...currentCountry.cities]
-                                    }
-                                } else {
-                                    return currentCountry
-                                }
-                            })
-                        }
-                    } else {
-                        return currentRegion
-                    }
-                })
+                regions: state.regions.map((currentRegion) => (currentRegion._id === region._id ? region : currentRegion))
             }
         case UPDATE_CITY:
             return {

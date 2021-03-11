@@ -76,7 +76,7 @@ const UserPage = () => {
                         <div className={`${styles.item} ${styles.header}`}>Perfil</div>
                         <div className={`${styles.item} ${styles.header}`}>Acciones</div>
                     </div>
-                    {userList}
+                    {userList.length > 0 ? userList : <div className={styles.empty}>No hay usuarios creados</div>}
                 </div>
             </section>
             <Modal visible={modalVisible}>

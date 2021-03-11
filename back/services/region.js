@@ -9,7 +9,12 @@ exports.deleteRegion = async (regionId) => {
     await Region.findByIdAndDelete(regionId)
 }
 
-exports.createCountry = async (region) => await Region.updateOne({ _id: region._id }, { $addToSet: { countries: region.country } })
+exports.createCountry = async (region) => {
+    const savedRegion = await Region.findById(region._id)
+    savedRegion.countries.push(region.country)
+    const res = await savedRegion.save()
+    return res
+}
 
 exports.updateCountry = async (object) => {
     await Region.updateOne(
@@ -35,13 +40,13 @@ exports.deleteCountry = async (regionId, countryId) => {
         })
 }
 
-exports.createCity = async (region) => await Region.updateOne(
-    { _id: region._id },
-    { $addToSet: { "countries.$[country].cities": region.country.city } }, {
-    arrayFilters: [
-        { "country._id": region.country._id }
-    ]
-})
+exports.createCity = async (region) => {
+    const savedRegion = await Region.findById(region._id)
+    const index = savedRegion.countries.findIndex(country => country._id == region.country._id)
+    savedRegion.countries[index].cities.push(region.country.city)
+    const res = await savedRegion.save()
+    return res
+}
 
 exports.updateCity = async (region) => {
     await Region.updateOne(
