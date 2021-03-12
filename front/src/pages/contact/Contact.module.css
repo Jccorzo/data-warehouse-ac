@@ -1,21 +1,62 @@
+.main {
+    padding: 30px;
+}
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+.table {
+    display: grid;
+}
 
 .empty {
     display: flex;
     justify-content: center;
+}
+
+.topContainer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.searchContainer {
+    display: flex;
+    align-items: center;
+    margin: 15px 0;
+}
+
+.buttonsContainer {
+    display: flex;
+    align-items: center;
+}
+
+.exportContact {
+    padding: 8px;
+    width: 160px;
+    background-color: white;
+    border: 1px solid #1d72c2;
+    color: #1d72c2;
+    margin: 0 5px;
+}
+
+.addContact {
+    padding: 8px;
+    width: 160px;
+    background-color: #1d72c2;
+    color: white;
+    border: none;
+    margin: 0 5px;
+}
+
+.img {
+    padding: 5px;
+    border: 1px solid rgba(0,0,0,0.1);
+    width: 36px;
+    height: 36px;
+    margin: 0 8px;
+}
+
+.search {
+    border: 1px solid #e8e8e8;
+    width: 502px;
+    padding: 8px;
+    border-radius: 5px;
 }

@@ -27,7 +27,11 @@ const CompanyPage = () => {
     const onSubmit = (event) => {
         event.preventDefault()
         if (action === 'Crear nueva compañía') {
-            dispatch(createCompany(newCompany))
+            if(newCompany.city === ''){
+                alert("Seleccione una ciudad")
+            } else {
+                dispatch(createCompany(newCompany))
+            } 
         } else {
             dispatch(updateCompany(newCompany))
         }
@@ -122,8 +126,9 @@ const CompanyPage = () => {
                     </div>
                     <div className={styles.inputContainer}>
                         <label htmlFor={'city'}>Ciudad:</label>
-                        <select className={styles.input} required={true}>
-                            {cities.map(city => <option value={city.name}>{city.name}</option>)}
+                        <select className={styles.input} name='city' defaultValue={"-"} required={true} onChange={handleInputChange}>
+                            <option disabled value={"-"} >Ciudad</option>
+                            {cities.map((city) => <option key={city._id} value={city.name}>{city.name}</option>)}
                         </select>
                     </div>
                     <Button title={'Guardar'} />
