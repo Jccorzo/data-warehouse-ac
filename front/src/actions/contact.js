@@ -16,7 +16,7 @@ export const createContact = (contact) =>
         }
     }
 
-export const updateCompany = (contact) =>
+export const updateContact = (contact) =>
     async (dispatch) => {
         try {
             await contactApi.update(contact);
@@ -39,7 +39,7 @@ export const getContacts = () =>
 export const deleteContact = (contactId) =>
     async (dispatch) => {
         try {
-            await companyApi.remove(contactId);
+            await contactApi.remove(contactId);
             dispatch(deleteContactAction(contactId))
         } catch (e) {
             alert(e.message)

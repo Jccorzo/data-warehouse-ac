@@ -9,6 +9,7 @@
 .empty {
     display: flex;
     justify-content: center;
+    margin: 20px 0;
 }
 
 .topContainer {
@@ -59,4 +60,36 @@
     width: 502px;
     padding: 8px;
     border-radius: 5px;
+}
+
+.table {
+    border: 1px solid #e8e8e8;
+    margin-top: 20px;
+}
+
+.row {
+    display: grid;
+    height: 56px;
+    grid-template-columns: 54px 250px repeat(5,186px) 82px;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.item {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.check {
+    align-self: center;
+    justify-self: center;
+    width: 15px;
+    height: 15px;
+    border: 3px solid #e8e8e8;
+}
+
+.sort {
+    height: 25px;
+    width: 20px;
 }

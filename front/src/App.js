@@ -23,7 +23,7 @@ const App = () => {
       <Header />
       <Switch>
         <Route exact path={'/'} >
-          {user ? <Redirect to={'/user'} /> : <LoginPage />}
+          {user ? <Redirect to={'/contact'} /> : <LoginPage />}
         </Route>
         <LoginRoute exact path={'/contact'} component={ContactPage} />
         <LoginRoute exact path={'/user'} component={UserPage} />
