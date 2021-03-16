@@ -2,16 +2,101 @@ import React, { useEffect, useMemo, useState } from 'react';
 import styles from './Contact.module.css';
 import Modal from '../../components/common/modal/Modal';
 import { useDispatch, useSelector } from 'react-redux';
-import { createContact, deleteContact, getContacts, updateContact } from '../../actions/contact';
+import { createContact, deleteContacts, getContacts, updateContact, getContactsByWord, getContactsAction } from '../../actions/contact';
+
+const resetContact = () => ({
+    name: '',
+    lastname: '',
+    position: '',
+    email: '',
+    company: '',
+    region: '',
+    country: '',
+    city: '',
+    address: '',
+    interest: 0,
+    channels: []
+})
 const ContactPage = () => {
     const dispatch = useDispatch()
     const [search, setSearch] = useState('');
+
+    const [nameAsc, setNameAsc] = useState(true);
+    const [regionAsc, setRegionAsc] = useState(true);
+    const [companyAsc, setCompanyAsc] = useState(true);
+    const [chargeAsc, setChargeAsc] = useState(true);
+    const [interestAsc, setInterestAsc] = useState(true);
+
+    const [selectedContacts, setSelectedContacts] = useState([]);
+
+    const [contactModal, setContactModal] = useState(true);
+    const [contactAction, setContactAction] = useState('Nuevo contacto')
+
+    const [contact, setContact] = useState(resetContact())
+
     const contacts = useSelector(state => state.contact.contacts)
-    const contactList = useMemo(() => [], [contacts])
+    const contactList = useMemo(() => (
+        contacts.map(contact => (
+            <div className={styles.row}>
+                <div className={styles.item}><input className={styles.check} type={'checkbox'} /></div>
+                <div className={styles.item}></div>
+                <div className={styles.item}></div>
+                <div className={styles.item}></div>
+                <div className={styles.item}></div>
+                <div className={styles.item}></div>
+                <div className={styles.item}></div>
+                <div className={styles.item}></div>
+            </div>
+        ))
+    ), [contacts])
+
+    const regions = useSelector(state => state.region.regions)
 
     useEffect(() => {
         dispatch(getContacts())
     }, [])
+
+    const getContactsBy = () => dispatch(getContactsByWord(search))
+
+    const sort = (attribute, array = [], asc = true) => {
+        if (array.length > 0) {
+            return array.sort((a, b) => asc ? a[attribute] - b[attribute] : b[attribute] - a[attribute])
+        } else {
+            return array
+        }
+    }
+
+    const sortBy = (attribute, array, asc) => {
+        dispatch(getContactsAction(sort(attribute, array, asc)))
+    }
+
+    const addContactToSelected = (contact) => {
+        setSelectedContacts([contact, ...selectedContacts])
+    }
+
+    const removeSelectedContact = (contact) => {
+        setSelectedContacts(selectedContacts.filter(currentContact => currentContact !== contact))
+    }
+
+    const removeContacts = (contacts = []) => {
+        dispatch(deleteContacts(contacts))
+        contacts.forEach(currentContact => {
+            removeSelectedContact(currentContact)
+        })
+    }
+
+    const onSubmit = (event) => {
+        event.preventDefault();
+    }
+
+    const handleInputChange = (event) => {
+        const target = event.target;
+        const value = target.type === 'checkbox' ? target.checked : target.value;
+        const name = target.name;
+        setContact(contact => { return { ...contact, [name]: value } })
+    }
+
+    const modalAction = () => setContactModal(!contactModal)
 
     return (
         <main className={styles.main}>
@@ -19,27 +104,125 @@ const ContactPage = () => {
             <div className={styles.topContainer}>
                 <div className={styles.searchContainer}>
                     <input className={styles.search} type={'text'} value={search} onChange={(evt) => setSearch(evt.target.value)} />
-                    <img className={styles.img} src={'../images/search.jpeg'} />
+                    <img className={styles.img} src={'../images/search.jpeg'} onClick={getContactsBy} />
                 </div>
                 <div className={styles.buttonsContainer}>
-                    <img className={styles.img} src={'../images/upload.jpeg'} style={{ border: '1px solid #1d72c2' }} />
-                    <button className={styles.exportContact}>Exportar contactos</button>
-                    <button className={styles.addContact}>Agregar contacto</button>
+                    <img className={styles.img} src={'../images/upload.jpeg'} style={{ border: '1px solid #1d72c2', visibility: 'hidden' }} />
+                    <button style={{ visibility: 'hidden' }} className={styles.exportContact}>Exportar contactos</button>
+                    <button onClick={modalAction} className={styles.addContact}>Agregar contacto</button>
                 </div>
             </div>
             <div className={styles.table}>
                 <div className={styles.row} style={{ height: 66.5, borderBottom: '1px solid #e8e8e8' }}>
                     <div className={`${styles.item} ${styles.header}`}> <input className={styles.check} type={'checkbox'} /> </div>
-                    <div className={`${styles.item} ${styles.header}`}>Contacto <img className={styles.sort} src={'../images/sort.jpeg'} /></div>
-                    <div className={`${styles.item} ${styles.header}`}>País/Región <img className={styles.sort} src={'../images/sort.jpeg'} /> </div>
-                    <div className={`${styles.item} ${styles.header}`}>Compañía <img className={styles.sort} src={'../images/sort.jpeg'} /></div>
-                    <div className={`${styles.item} ${styles.header}`}>Cargo <img className={styles.sort} src={'../images/sort.jpeg'} /></div>
+                    <div className={`${styles.item} ${styles.header}`} onClick={() => { sortBy('contact', contacts, nameAsc); setNameAsc(!nameAsc) }}>Contacto <img className={styles.sort} src={'../images/sort.jpeg'} /></div>
+                    <div className={`${styles.item} ${styles.header}`} onClick={() => { sortBy('region', contacts, regionAsc); setRegionAsc(!regionAsc) }}>País/Región <img className={styles.sort} src={'../images/sort.jpeg'} /> </div>
+                    <div className={`${styles.item} ${styles.header}`} onClick={() => { sortBy('company', contacts, companyAsc); setCompanyAsc(!companyAsc) }}>Compañía <img className={styles.sort} src={'../images/sort.jpeg'} /></div>
+                    <div className={`${styles.item} ${styles.header}`} onClick={() => { sortBy('charge', contacts, chargeAsc); setChargeAsc(!chargeAsc) }}>Cargo <img className={styles.sort} src={'../images/sort.jpeg'} /></div>
                     <div className={`${styles.item} ${styles.header}`}>Canal preferido</div>
-                    <div className={`${styles.item} ${styles.header}`}>Interés <img className={styles.sort} src={'../images/sort.jpeg'} /></div>
+                    <div className={`${styles.item} ${styles.header}`} onClick={() => { sortBy('interest', contacts, interestAsc); setInterestAsc(!interestAsc) }}>Interés <img className={styles.sort} src={'../images/sort.jpeg'} /></div>
                     <div className={`${styles.item} ${styles.header}`}>Acciones</div>
                 </div>
                 {contactList.length > 0 ? contactList : <div className={styles.empty}>No hay contactos creados</div>}
             </div>
+            <Modal visible={contactModal}>
+                <form onSubmit={onSubmit} className={styles.form}>
+
+                    <div className={styles.top}>
+                        <div className={styles.titleContainer}>
+                            <p className={styles.formTitle}>{contactAction}</p>
+                            <span onClick={modalAction} style={{ cursor: 'pointer', fontSize: 30 }}>&times;</span>
+                        </div>
+                        <div className={styles.mainData}>
+                            <div className={styles.inputContainer}>
+                                <label htmlFor={'name'}>Nombre:</label>
+                                <input required={true} className={styles.input} onChange={handleInputChange} name={"name"} type={"text"} value={contact.name} />
+                            </div>
+                            <div className={styles.inputContainer}>
+                                <label htmlFor={'name'}>Apellido:</label>
+                                <input required={true} className={styles.input} onChange={handleInputChange} name={"lastname"} type={"text"} value={contact.lastname} />
+                            </div>
+                            <div className={styles.inputContainer}>
+                                <label htmlFor={'position'}>Cargo:</label>
+                                <input required={true} className={styles.input} onChange={handleInputChange} name={"position"} type={"text"} value={contact.position} />
+                            </div>
+                            <div className={styles.inputContainer}>
+                                <label htmlFor={'email'}>Email:</label>
+                                <input required={true} className={styles.input} onChange={handleInputChange} name={"email"} type={"text"} value={contact.email} />
+                            </div>
+                            <div className={styles.inputContainer}>
+                                <label htmlFor={'company'}>Compañia:</label>
+                                <input required={true} className={styles.input} onChange={handleInputChange} name={"company"} type={"text"} value={contact.company} />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className={styles.secondaryData}>
+                        <div className={styles.inputContainer}>
+                            <label htmlFor={'region'}>Region:</label>
+                            <select className={styles.input} name='city' defaultValue={"-"} required={true} onChange={handleInputChange}>
+                                <option disabled value={"-"} >Region</option>
+                                {regions.map((region) => <option key={region._id} value={region.name}>{region.name}</option>)}
+                            </select>
+                        </div>
+                        <div className={styles.inputContainer}>
+                            <label htmlFor={'country'}>País:</label>
+                            <select className={styles.input} name='city' defaultValue={"-"} required={true} onChange={handleInputChange}>
+                                <option disabled value={"-"} >País</option>
+                                {regions.map((region) => <option key={region._id} value={region.name}>{region.name}</option>)}
+                            </select>
+                        </div>
+                        <div className={styles.inputContainer}>
+                            <label htmlFor={'city'}>Ciudad:</label>
+                            <select className={styles.input} name='city' defaultValue={"-"} required={true} onChange={handleInputChange}>
+                                <option disabled value={"-"} >Ciudad</option>
+                                {regions.map((region) => <option key={region._id} value={region.name}>{region.name}</option>)}
+                            </select>
+                        </div>
+                        <div className={styles.inputContainer}>
+                            <label htmlFor={'address'}>Dirección:</label>
+                            <input required={true} className={styles.input} onChange={handleInputChange} name={"address"} type={"text"} value={contact.address} />
+                        </div>
+                        <div className={styles.inputContainer}>
+                            <label htmlFor={'interest'} style={{width:'max-content'}} >Interés:</label>
+                            <select className={styles.input} style={{width:'max-content'}} name={'interest'} defaultValue={0} required={true} onChange={handleInputChange}>
+                                <option value={0} >0%</option>
+                                <option value={25} >25%</option>
+                                <option value={50} >50%</option>
+                                <option value={75} >75%</option>
+                                <option value={100} >100%</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div className={styles.thirdData}>
+                        <div className={styles.inputContainer}>
+                            <label htmlFor={'city'} style={{width:'max-content'}}>Canal de contacto:</label>
+                            <select className={styles.input} name={'city'} defaultValue={"-"} onChange={handleInputChange}>
+                                <option disabled value={"-"} >Seleccionar canal</option>
+                                {regions.map((region) => <option key={region._id} value={region.name}>{region.name}</option>)}
+                            </select>
+                        </div>
+                        <div className={styles.inputContainer}>
+                            <label htmlFor={'address'} style={{width:'max-content'}}>Cuenta de usuario:</label>
+                            <input className={styles.input} onChange={handleInputChange} placeholder={'@ejemplo'} name={"address"} type={"text"} value={contact.address} />
+                        </div>
+                        <div className={styles.inputContainer}>
+                            <label htmlFor={'city'} >Preferencias:</label>
+                            <select className={styles.input} name='city' defaultValue={"-"} onChange={handleInputChange}>
+                                <option disabled value={"-"} >Sin preferencia</option>
+                                {regions.map((region) => <option key={region._id} value={region.name}>{region.name}</option>)}
+                            </select>
+                        </div>
+                    </div>
+
+                    <div className={styles.formButtons}>
+                        <button>Cancelar</button>
+                        <input type={'submit'} value={'Guardar'} />
+                    </div>
+
+                </form>
+            </Modal>
         </main>
     )
 }

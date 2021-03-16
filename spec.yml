@@ -388,6 +388,12 @@ paths:
       security:
         - bearerAuth: []
       summary: "Get all Contacts"
+      parameters:
+        - name: contactId
+          in: query
+          required: false
+          schema:
+            type: "string"
       responses:
         "200":
           description: "request success"
@@ -594,13 +600,13 @@ paths:
     delete:
       security:
         - bearerAuth: []
-      summary: "delete specific order"
+      summary: "delete contacts"
       parameters:
         - name: contactId
           in: query
           required: true
           schema:
-            type: "string"
+            type: "array"
       responses:
         "200":
           description: "delete succesfull"

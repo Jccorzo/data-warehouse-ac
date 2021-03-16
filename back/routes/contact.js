@@ -33,8 +33,9 @@ module.exports = (app) => {
     })
 
     app.get('/contact', async (req, res) => {
+        const word = req.query;
         try {
-            const contacts = await contactServices.getContacts()
+            const contacts = await contactServices.getContacts(word)
             res.json({ contacts })
         } catch (e) {
             res.status(400).json({ message: 'Ocurrió un error obteniendo los contactos' })

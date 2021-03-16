@@ -7,8 +7,8 @@ const ContactSchema = mongoose.Schema({
     email: { type: String, required: true },
     company: { type: String, required: true },
     city: {
-        name: { type: String, required: true },
-        code: { type: String, required: true }
+        name: { type: String },
+        code: { type: String }
     },
     address: { type: String, required: true },
     channels: [
@@ -18,7 +18,7 @@ const ContactSchema = mongoose.Schema({
             preference: { type: String }
         }
     ],
-    interest: { type: Number, required: true }
+    interest: { type: Number }
 })
 
 module.exports = mongoose.model('Contact', ContactSchema);
