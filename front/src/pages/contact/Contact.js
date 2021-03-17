@@ -17,6 +17,7 @@ const resetContact = () => ({
     interest: 0,
     channels: []
 })
+
 const ContactPage = () => {
     const dispatch = useDispatch()
     const [search, setSearch] = useState('');
@@ -33,6 +34,12 @@ const ContactPage = () => {
     const [contactAction, setContactAction] = useState('Nuevo contacto')
 
     const [contact, setContact] = useState(resetContact())
+
+    const [selectedRegion, setSelectedRegion] = useState({ _id: '', countries: [] });
+    const [selectedCountry, setSelectedCountry] = useState({ _id: '', cities: [] });
+    const [selectedCity, setSelectedCity] = useState({ _id: '' });
+
+    const [channels] = useState(["Teléfono", "Email", "WhatsApp", "Facebook", "Twitter"])
 
     const contacts = useSelector(state => state.contact.contacts)
     const contactList = useMemo(() => (
@@ -51,6 +58,7 @@ const ContactPage = () => {
     ), [contacts])
 
     const regions = useSelector(state => state.region.regions)
+    const companies = useSelector(state => state.company.companies)
 
     useEffect(() => {
         dispatch(getContacts())
@@ -96,6 +104,23 @@ const ContactPage = () => {
         setContact(contact => { return { ...contact, [name]: value } })
     }
 
+    const selectRegion = (event) => {
+        handleInputChange(event)
+        setSelectedRegion(findById(event.target.value, regions))
+    }
+
+    const selectCountry = (event) => {
+        handleInputChange(event)
+        setSelectedCountry(findById(event.target.value, selectedRegion.countries))
+    }
+
+    const selectCity = (event) => {
+        handleInputChange(event)
+        setSelectedCity(findById(event.target.value, selectedCountry.cities))
+    }
+
+    const findById = (id, array) => array.filter(item => item._id == id)[0]
+
     const modalAction = () => setContactModal(!contactModal)
 
     return (
@@ -135,24 +160,27 @@ const ContactPage = () => {
                         </div>
                         <div className={styles.mainData}>
                             <div className={styles.inputContainer}>
-                                <label htmlFor={'name'}>Nombre:</label>
+                                <label className={styles.important} htmlFor={'name'}>Nombre:</label>
                                 <input required={true} className={styles.input} onChange={handleInputChange} name={"name"} type={"text"} value={contact.name} />
                             </div>
                             <div className={styles.inputContainer}>
-                                <label htmlFor={'name'}>Apellido:</label>
+                                <label className={styles.important} htmlFor={'lastname'}>Apellido:</label>
                                 <input required={true} className={styles.input} onChange={handleInputChange} name={"lastname"} type={"text"} value={contact.lastname} />
                             </div>
                             <div className={styles.inputContainer}>
-                                <label htmlFor={'position'}>Cargo:</label>
+                                <label className={styles.important} htmlFor={'position'}>Cargo:</label>
                                 <input required={true} className={styles.input} onChange={handleInputChange} name={"position"} type={"text"} value={contact.position} />
                             </div>
                             <div className={styles.inputContainer}>
-                                <label htmlFor={'email'}>Email:</label>
+                                <label className={styles.important} htmlFor={'email'}>Email:</label>
                                 <input required={true} className={styles.input} onChange={handleInputChange} name={"email"} type={"text"} value={contact.email} />
                             </div>
                             <div className={styles.inputContainer}>
-                                <label htmlFor={'company'}>Compañia:</label>
-                                <input required={true} className={styles.input} onChange={handleInputChange} name={"company"} type={"text"} value={contact.company} />
+                                <label className={styles.important} htmlFor={'company'}>Compañia:</label>
+                                <select className={styles.input} name='company' defaultValue={"-"} required={true} onChange={handleInputChange}>
+                                    <option disabled value={"-"} >Compañía</option>
+                                    {companies.map((company) => <option key={company._id} value={company._id}>{company.name}</option>)}
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -160,23 +188,23 @@ const ContactPage = () => {
                     <div className={styles.secondaryData}>
                         <div className={styles.inputContainer}>
                             <label htmlFor={'region'}>Region:</label>
-                            <select className={styles.input} name='city' defaultValue={"-"} required={true} onChange={handleInputChange}>
+                            <select className={styles.input} name='region' defaultValue={"-"} required={true} onChange={selectRegion}>
                                 <option disabled value={"-"} >Region</option>
-                                {regions.map((region) => <option key={region._id} value={region.name}>{region.name}</option>)}
+                                {regions.map((region) => <option key={region._id} value={region._id}>{region.name}</option>)}
                             </select>
                         </div>
                         <div className={styles.inputContainer}>
                             <label htmlFor={'country'}>País:</label>
-                            <select className={styles.input} name='city' defaultValue={"-"} required={true} onChange={handleInputChange}>
+                            <select className={styles.input} name='country' disabled={selectedRegion._id ? false : true} defaultValue={"-"} required={true} onChange={selectCountry}>
                                 <option disabled value={"-"} >País</option>
-                                {regions.map((region) => <option key={region._id} value={region.name}>{region.name}</option>)}
+                                {selectedRegion.countries.map((region) => <option key={region._id} value={region._id}>{region.name}</option>)}
                             </select>
                         </div>
                         <div className={styles.inputContainer}>
                             <label htmlFor={'city'}>Ciudad:</label>
-                            <select className={styles.input} name='city' defaultValue={"-"} required={true} onChange={handleInputChange}>
+                            <select className={styles.input} name='city' defaultValue={"-"} disabled={selectedCountry._id ? false : true} required={true} onChange={selectCity}>
                                 <option disabled value={"-"} >Ciudad</option>
-                                {regions.map((region) => <option key={region._id} value={region.name}>{region.name}</option>)}
+                                {selectedCountry.cities.map((region) => <option key={region._id} value={region._id}>{region.name}</option>)}
                             </select>
                         </div>
                         <div className={styles.inputContainer}>
@@ -184,8 +212,8 @@ const ContactPage = () => {
                             <input required={true} className={styles.input} onChange={handleInputChange} name={"address"} type={"text"} value={contact.address} />
                         </div>
                         <div className={styles.inputContainer}>
-                            <label htmlFor={'interest'} style={{width:'max-content'}} >Interés:</label>
-                            <select className={styles.input} style={{width:'max-content'}} name={'interest'} defaultValue={0} required={true} onChange={handleInputChange}>
+                            <label htmlFor={'interest'} style={{ width: 'max-content' }} >Interés:</label>
+                            <select className={styles.input} style={{ width: 'max-content' }} name={'interest'} defaultValue={0} required={true} onChange={handleInputChange}>
                                 <option value={0} >0%</option>
                                 <option value={25} >25%</option>
                                 <option value={50} >50%</option>
@@ -197,27 +225,28 @@ const ContactPage = () => {
 
                     <div className={styles.thirdData}>
                         <div className={styles.inputContainer}>
-                            <label htmlFor={'city'} style={{width:'max-content'}}>Canal de contacto:</label>
+                            <label htmlFor={'city'} style={{ width: 'max-content' }}>Canal de contacto:</label>
                             <select className={styles.input} name={'city'} defaultValue={"-"} onChange={handleInputChange}>
                                 <option disabled value={"-"} >Seleccionar canal</option>
-                                {regions.map((region) => <option key={region._id} value={region.name}>{region.name}</option>)}
+                                {channels.map((region,index) => <option key={index} value={index}>{region}</option>)}
                             </select>
                         </div>
                         <div className={styles.inputContainer}>
-                            <label htmlFor={'address'} style={{width:'max-content'}}>Cuenta de usuario:</label>
+                            <label htmlFor={'address'} style={{ width: 'max-content' }}>Cuenta de usuario:</label>
                             <input className={styles.input} onChange={handleInputChange} placeholder={'@ejemplo'} name={"address"} type={"text"} value={contact.address} />
                         </div>
                         <div className={styles.inputContainer}>
                             <label htmlFor={'city'} >Preferencias:</label>
-                            <select className={styles.input} name='city' defaultValue={"-"} onChange={handleInputChange}>
-                                <option disabled value={"-"} >Sin preferencia</option>
-                                {regions.map((region) => <option key={region._id} value={region.name}>{region.name}</option>)}
+                            <select className={styles.input} name='city' defaultValue={"sn"} onChange={handleInputChange}>
+                                <option disabled value={"sn"} >Sin preferencia</option>
+                                <option value={"cf"} >Canal favorito</option>
+                                <option value={"nm"} >No molestar</option>
                             </select>
                         </div>
                     </div>
 
                     <div className={styles.formButtons}>
-                        <button>Cancelar</button>
+                        <button onClick={modalAction}>Cancelar</button>
                         <input type={'submit'} value={'Guardar'} />
                     </div>
 

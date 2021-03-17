@@ -186,3 +186,21 @@
     right: 0;
     margin: 30px;
 }
+
+.formButtons > * {
+    width: 173px;
+    height: 42px;
+    font-weight: bold;
+    border: none;
+    margin: 0 5px;
+}
+
+.important::after {
+    content: '*';
+    color: #F03738;
+}
+
+select:disabled {
+    background-color: #C6CACC;
+    color: #000000;
+}
