@@ -228,7 +228,7 @@ const ContactPage = () => {
                             <label htmlFor={'city'} style={{ width: 'max-content' }}>Canal de contacto:</label>
                             <select className={styles.input} name={'city'} defaultValue={"-"} onChange={handleInputChange}>
                                 <option disabled value={"-"} >Seleccionar canal</option>
-                                {channels.map((region,index) => <option key={index} value={index}>{region}</option>)}
+                                {channels.map((region, index) => <option key={index} value={index}>{region}</option>)}
                             </select>
                         </div>
                         <div className={styles.inputContainer}>
