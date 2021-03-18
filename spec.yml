@@ -607,6 +607,8 @@ paths:
           required: true
           schema:
             type: "array"
+            items: 
+              type: "string"
       responses:
         "200":
           description: "delete succesfull"
@@ -760,7 +762,7 @@ paths:
                             type: "array"
                             items:
                               type: "object"
-  /region/country:
+  /country:
     post:
       summary: "Create country"
       security:
@@ -771,7 +773,7 @@ paths:
             schema:
               type: "object"
               properties:
-                _id: 
+                regionId: 
                   type: "string"
                 country:
                   type: "object"
@@ -807,15 +809,10 @@ paths:
             schema:
               type: "object"
               properties:
-                _id: 
+                _id:
                   type: "string"
-                country:
-                  type: "object"
-                  properties:
-                    _id:
-                      type: "string"
-                    name:
-                      type: "string"
+                name:
+                  type: "string"
       responses: 
         "200":
           description: "Country updated"
@@ -840,11 +837,6 @@ paths:
           - bearerAuth: []
         summary: "Delete region"
         parameters:
-          - name: regionId
-            in: query
-            required: true
-            schema:
-              type: "string"
           - name: countryId
             in: query
             required: true
@@ -878,7 +870,7 @@ paths:
                   properties: 
                     message:
                       type: "string"       
-  /region/country/city:
+  /city:
     post:
       summary: "Create city"
       security:
@@ -889,20 +881,15 @@ paths:
             schema:
               type: "object"
               properties:
-                _id: 
+                regionId: 
                   type: "string"
-                country:
+                city:
                   type: "object"
                   properties:
-                    _id:
+                    code:
                       type: "string"
-                    city:
-                      type: "object"
-                      properties:
-                        code:
-                          type: "string"
-                        name:
-                          type: "string"
+                    name:
+                      type: "string"
       responses: 
         "201":
           description: "City created"
@@ -932,20 +919,10 @@ paths:
             schema:
               type: "object"
               properties:
-                _id: 
+                _id:
                   type: "string"
-                country:
-                  type: "object"
-                  properties:
-                    _id:
-                      type: "string"
-                    city:
-                      type: "object"
-                      properties:
-                        _id:
-                          type: "string"
-                        name:
-                          type: "string"
+                name:
+                  type: "string"
       responses: 
         "200":
           description: "Region created"
@@ -970,16 +947,6 @@ paths:
           - bearerAuth: []
         summary: "Delete city"
         parameters:
-          - name: regionId
-            in: query
-            required: true
-            schema:
-              type: "string"
-          - name: countryId
-            in: query
-            required: true
-            schema:
-              type: "string"
           - name: cityId
             in: query
             required: true
@@ -1013,3 +980,24 @@ paths:
                   properties: 
                     message:
                       type: "string"       
+    get:
+        security:
+          - bearerAuth: []
+        summary: "Get all cities"
+        responses:
+          "200":
+            description: "request success"
+            content:
+              application/json:
+                schema:
+                  type: "object"
+                  properties:
+                    cities: 
+                      type: "array"
+                      items: 
+                        type: "object"
+                        properties:
+                          _id: 
+                            type: "string"
+                          name:
+                            type: "string"

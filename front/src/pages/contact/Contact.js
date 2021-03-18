@@ -15,7 +15,33 @@ const resetContact = () => ({
     city: '',
     address: '',
     interest: 0,
-    channels: []
+    channels: [
+        {
+            name: "Teléfono",
+            account: '',
+            preference: false
+        },
+        {
+            name: "Email",
+            account: '',
+            preference: false
+        },
+        {
+            name: "WhatsApp",
+            account: '',
+            preference: false
+        },
+        {
+            name: "Facebook",
+            account: '',
+            preference: false
+        },
+        {
+            name: "Twitter",
+            account: '',
+            preference: false
+        }
+    ]
 })
 
 const ContactPage = () => {
@@ -46,16 +72,18 @@ const ContactPage = () => {
         contacts.map(contact => (
             <div className={styles.row}>
                 <div className={styles.item}><input className={styles.check} type={'checkbox'} /></div>
-                <div className={styles.item}></div>
-                <div className={styles.item}></div>
-                <div className={styles.item}></div>
-                <div className={styles.item}></div>
-                <div className={styles.item}></div>
-                <div className={styles.item}></div>
+                <div className={styles.item}><p>{contact.name}</p><p>{contact.email}</p></div>
+                <div className={styles.item}><p>{contact.country}</p><p>{contact.region}</p></div>
+                <div className={styles.item}>{contact.company}</div>
+                <div className={styles.item}>{contact.position}</div>
+                <div className={styles.item}>{contact.channels.filter(channel => channel.preference === true).map(channel =>(<div>{channel.name}</div>))}</div>
+                <div className={styles.item}>{contact.interest}%</div>
                 <div className={styles.item}></div>
             </div>
         ))
     ), [contacts])
+
+    console.log(contacts)
 
     const regions = useSelector(state => state.region.regions)
     const companies = useSelector(state => state.company.companies)
@@ -93,15 +121,16 @@ const ContactPage = () => {
         })
     }
 
-    const onSubmit = (event) => {
-        event.preventDefault();
-    }
-
     const handleInputChange = (event) => {
         const target = event.target;
         const value = target.type === 'checkbox' ? target.checked : target.value;
         const name = target.name;
-        setContact(contact => { return { ...contact, [name]: value } })
+        setContact(contact => ({ ...contact, [name]: value }))
+    }
+
+    const handleInputChangeForChannels = (event, pos, att) => {
+        const value = event.target.value;
+        setContact(contact => ({ ...contact, channels: contact.channels.map((channel, index) => (index === pos ? ({ ...channel, [att]: value }) : channel)) }))
     }
 
     const selectRegion = (event) => {
@@ -122,6 +151,21 @@ const ContactPage = () => {
     const findById = (id, array) => array.filter(item => item._id == id)[0]
 
     const modalAction = () => setContactModal(!contactModal)
+
+    const onSubmit = (event) => {
+        event.preventDefault();
+        console.log(contact)
+        if (!contact.company) {
+            alert('company vacío')
+        } else {
+            dispatch(createContact(contact))
+        }
+        //setContact(resetContact())
+        //setSelectedCity({_id:''})
+        //setSelectedCountry({_id: '', cities: []})
+        //setSelectedRegion({_id: '', countries: []})
+
+    }
 
     return (
         <main className={styles.main}>
@@ -223,31 +267,30 @@ const ContactPage = () => {
                         </div>
                     </div>
 
-                    <div className={styles.thirdData}>
-                        <div className={styles.inputContainer}>
-                            <label htmlFor={'city'} style={{ width: 'max-content' }}>Canal de contacto:</label>
-                            <select className={styles.input} name={'city'} defaultValue={"-"} onChange={handleInputChange}>
-                                <option disabled value={"-"} >Seleccionar canal</option>
-                                {channels.map((region, index) => <option key={index} value={index}>{region}</option>)}
-                            </select>
-                        </div>
-                        <div className={styles.inputContainer}>
-                            <label htmlFor={'address'} style={{ width: 'max-content' }}>Cuenta de usuario:</label>
-                            <input className={styles.input} onChange={handleInputChange} placeholder={'@ejemplo'} name={"address"} type={"text"} value={contact.address} />
-                        </div>
-                        <div className={styles.inputContainer}>
-                            <label htmlFor={'city'} >Preferencias:</label>
-                            <select className={styles.input} name='city' defaultValue={"sn"} onChange={handleInputChange}>
-                                <option disabled value={"sn"} >Sin preferencia</option>
-                                <option value={"cf"} >Canal favorito</option>
-                                <option value={"nm"} >No molestar</option>
-                            </select>
-                        </div>
-                    </div>
+                    {channels.map((channel, index) => (
+                        <div key={index} className={styles.thirdData}>
+                            <div className={styles.inputContainer}>
+                                <label style={{ width: 'max-content' }}>Cuenta de usuario:</label>
+                                <input className={styles.input} disabled={true} onChange={(evt) => handleInputChangeForChannels(evt, index, 'name')} type={"text"} value={channel} />
+                            </div>
+                            <div className={styles.inputContainer}>
+                                <label style={{ width: 'max-content' }}>Cuenta de usuario:</label>
+                                <input className={styles.input} onChange={(evt) => handleInputChangeForChannels(evt, index, 'account')} placeholder={'@ejemplo'} type={"text"} value={contact.channels[index].account} />
+                            </div>
+                            <div className={styles.inputContainer}>
+                                <label >Preferencias:</label>
+                                <select className={styles.input} defaultValue={"-"} onChange={(evt) => handleInputChangeForChannels(evt, index, 'preference')}>
+                                    <option disabled value={"-"} >Sin preferencia</option>
+                                    <option value={true} >Canal favorito</option>
+                                    <option value={false} >No molestar</option>
+                                </select>
+                            </div>
+                        </div>)
+                    )}
 
                     <div className={styles.formButtons}>
                         <button onClick={modalAction}>Cancelar</button>
-                        <input type={'submit'} value={'Guardar'} />
+                        <input type={'submit'} value={'Guardar'} disabled={false} />
                     </div>
 
                 </form>

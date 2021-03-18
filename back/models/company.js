@@ -5,7 +5,7 @@ const CompanySchema = mongoose.Schema({
     address: "string",
     email: "string",
     phone: 0,
-    city: "string"
+    city: { type: mongoose.Schema.Types.ObjectId, ref: 'City' }
 })
 
 module.exports = mongoose.model('Company', CompanySchema)

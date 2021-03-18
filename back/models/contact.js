@@ -2,14 +2,13 @@ const mongoose = require('mongoose');
 
 const ContactSchema = mongoose.Schema({
     name: { type: String, required: true },
-    lastName: { type: String, required: true },
+    lastname: { type: String, required: true },
     position: { type: String, required: true },
     email: { type: String, required: true },
     company: { type: String, required: true },
-    city: {
-        name: { type: String },
-        code: { type: String }
-    },
+    region: { type: mongoose.Schema.Types.ObjectId, ref: 'Region', required: true },
+    country: { type: mongoose.Schema.Types.ObjectId, ref: 'Country', required: true },
+    city: { type: mongoose.Schema.Types.ObjectId, ref: 'City', required: true },
     address: { type: String, required: true },
     channels: [
         {

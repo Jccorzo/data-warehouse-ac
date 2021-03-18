@@ -1,4 +1,4 @@
-const User = require('../models/user');
+const { User } = require('../models/index');
 const crypto = require('crypto');
 const jwt = require('jsonwebtoken');
 const config = require('../config');
@@ -14,8 +14,6 @@ exports.update = async (user) => {
     const securePass = crypto.createHash('md5').update(user.password).digest('hex');
     await User.findByIdAndUpdate(user._id, { ...user, password: securePass })
 }
-
-
 
 exports.remove = (userId) => {
     return User.findByIdAndDelete(userId)

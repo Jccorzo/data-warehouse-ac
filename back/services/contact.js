@@ -1,8 +1,8 @@
-const Contact = require('../models/contact');
+const { Contact } = require('../models/index');
 
 exports.getContacts = async (word = '') => {
     if (word) {
-        return await Contact.find()
+        return await Contact.find().populate()
     } else {
         await Contact.find({ $text: word })
     }

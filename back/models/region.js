@@ -1,18 +1,8 @@
-const moongose = require("mongoose");
+const mongoose = require("mongoose");
 
-const RegionSchema = moongose.Schema({
+const RegionSchema = mongoose.Schema({
     name: { type: String, required: true, index: { unique: true } },
-    countries: [
-        {
-            name: { type: String },
-            cities: [
-                {
-                    code: { type: String },
-                    name: { type: String }
-                }
-            ]
-        }
-    ]
+    countries: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Country' }]
 })
 
-module.exports = moongose.model("Region", RegionSchema)
+module.exports = mongoose.model("Region", RegionSchema)

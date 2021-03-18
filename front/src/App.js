@@ -9,13 +9,14 @@ import LoginPage from './pages/login/Login';
 import Header from './components/common/header/Header';
 import { useSelector, useDispatch } from 'react-redux';
 import { getRegions } from './actions/region';
+import { getCompanies } from './actions/company';
 
 const App = () => {
   const dispatch = useDispatch()
   const user = useSelector(state => state.auth.user)
 
   useEffect(() => {
-    if (user) dispatch(getRegions())
+    if (user) dispatch(getRegions()); dispatch(getCompanies())
   }, [user])
 
   return (

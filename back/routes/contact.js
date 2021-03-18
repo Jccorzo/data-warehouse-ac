@@ -8,6 +8,7 @@ module.exports = (app) => {
             const newContact = await contactServices.createContact(contact)
             res.json({ ...newContact._doc })
         } catch (e) {
+            console.log(e)
             res.status(400).json({ message: 'Ocurrió un error creando el contacto' })
         }
     })

@@ -195,6 +195,10 @@
     margin: 0 5px;
 }
 
+.formButtons > input {
+    background-color: #0683F9;
+}
+
 .important::after {
     content: '*';
     color: #F03738;

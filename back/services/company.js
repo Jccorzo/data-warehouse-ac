@@ -1,4 +1,4 @@
-const Company = require('../models/company');
+const { Company } = require('../models/index');
 
 exports.getAll = async () => await Company.find()
 
