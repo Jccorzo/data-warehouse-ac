@@ -4,9 +4,9 @@ const countryServices = require('../services/country');
 module.exports = (app) => {
 
     app.post('/country', async (req, res) => {
-        const country = req.body;
+        const { regionId, country } = req.body;
         try {
-            const newCountry = await countryServices.createCountry(country)
+            const newCountry = await countryServices.createCountry(regionId, country)
             res.json({ ...newCountry._doc })
         } catch (e) {
             res.status(400).json({ message: 'Ocurrió un error creando el país' })

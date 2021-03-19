@@ -6,12 +6,12 @@ const deleteRegionAction = (regionId) => ({ type: DELETE_REGION, regionId })
 const getRegionsAction = (regions) => ({ type: GET_REGIONS, regions })
 const updateRegionAction = (region) => ({ type: UPDATE_REGION, region })
 
-const createCountryAction = (region) => ({ type: CREATE_COUNTRY, region })
-const updateCountryAction = (region) => ({ type: UPDATE_COUNTRY, region })
+const createCountryAction = (regionId, country) => ({ type: CREATE_COUNTRY, regionId, country })
+const updateCountryAction = (regionId, country) => ({ type: UPDATE_COUNTRY, regionId, country })
 const deleteCountryAction = (regionId, countryId) => ({ type: DELETE_COUNTRY, regionId, countryId })
 
-const createCityAction = (region) => ({ type: CREATE_CITY, region })
-const updateCityAction = (region) => ({ type: UPDATE_CITY, region })
+const createCityAction = (regionId, countryId, city) => ({ type: CREATE_CITY, regionId, countryId, city })
+const updateCityAction = (regionId, countryId, city) => ({ type: UPDATE_CITY, regionId, countryId, city })
 const deleteCityAction = (regionId, countryId, cityId) => ({ type: DELETE_CITY, regionId, countryId, cityId })
 
 export const createRegion = (region) =>
@@ -54,21 +54,21 @@ export const updateRegion = (region) =>
         }
     }
 
-export const createCountry = (region) =>
+export const createCountry = (regionId, country) =>
     async (dispatch) => {
         try {
-            const regionUpdated = await regionApi.createCountry(region);
-            dispatch(createCountryAction(regionUpdated))
+            const regionUpdated = await regionApi.createCountry(regionId, country);
+            dispatch(createCountryAction(regionId, regionUpdated))
         } catch (e) {
             alert(e.message)
         }
     }
 
-export const updateCountry = (region) =>
+export const updateCountry = (regionId, country) =>
     async (dispatch) => {
         try {
-            await regionApi.updateCountry(region);
-            dispatch(updateCountryAction(region))
+            await regionApi.updateCountry(country);
+            dispatch(updateCountryAction(regionId, country))
         } catch (e) {
             alert(e.message)
         }
@@ -77,27 +77,27 @@ export const updateCountry = (region) =>
 export const deleteCountry = (regionId, countryId) =>
     async (dispatch) => {
         try {
-            await regionApi.deleteCountry(regionId, countryId);
+            await regionApi.deleteCountry(countryId);
             dispatch(deleteCountryAction(regionId, countryId))
         } catch (e) {
             alert(e.message)
         }
     }
 
-export const createCity = (region) =>
+export const createCity = (regionId, countryId, city) =>
     async (dispatch) => {
         try {
-            const newCity = await regionApi.createCity(region);
-            dispatch(createCityAction(newCity))
+            const newCity = await regionApi.createCity(countryId, city);
+            dispatch(createCityAction(regionId, countryId, newCity))
         } catch (e) {
             alert(e.message)
         }
     }
-export const updateCity = (region) =>
+export const updateCity = (regionId, countryId, city) =>
     async (dispatch) => {
         try {
-            await regionApi.updateCity(region);
-            dispatch(updateCityAction(region))
+            await regionApi.updateCity(city);
+            dispatch(updateCityAction(regionId, countryId, city))
         } catch (e) {
             alert(e.message)
         }
@@ -106,7 +106,7 @@ export const updateCity = (region) =>
 export const deleteCity = (regionId, countryId, cityId) =>
     async (dispatch) => {
         try {
-            await regionApi.deleteCity(regionId, countryId, cityId);
+            await regionApi.deleteCity(cityId);
             dispatch(deleteCityAction(regionId, countryId, cityId))
         } catch (e) {
             alert(e.message)

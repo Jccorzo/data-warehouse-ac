@@ -1,4 +1,4 @@
-import { CREATE_CONTACT, DELETE_CONTACT, GET_CONTACTS, UPDATE_CONTACT } from "../actions/index";
+import { CREATE_CONTACT, DELETE_CONTACT, GET_CONTACTS, UPDATE_CONTACT, SELECT_CONTACT, DELETE_SELECTED_CONTACTS } from "../actions/index";
 
 const contactInitial = {
     contacts: []
@@ -21,11 +21,17 @@ const contactReducer = (state = contactInitial, { type, contact, contactId, cont
                 ...state,
                 contacts: state.contacts.filter(currentContact => currentContact._id !== contactId)
             }
-        case GET_CONTACTS: 
+        case GET_CONTACTS:
             return {
                 ...state,
                 contacts: contacts
             }
+        case SELECT_CONTACT: {
+            return {
+                ...state,
+                contacts: state.contacts.map(contact => (contact._id === contactId ? { ...contact, selected: !contact.selected } : contact))
+            }
+        }
         default: return state
     }
 }

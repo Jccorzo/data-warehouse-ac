@@ -8,6 +8,8 @@ const userRoutes = require('./routes/user');
 const contactRoutes = require('./routes/contact');
 const companyRoutes = require('./routes/company');
 const regionRoutes = require('./routes/region');
+const countryRoutes = require('./routes/country');
+const cityRoutes = require('./routes/city');
 const config = require('./config');
 const app = express();
 
@@ -33,6 +35,8 @@ userRoutes(app);
 contactRoutes(app);
 companyRoutes(app);
 regionRoutes(app);
+countryRoutes(app);
+cityRoutes(app);
 
 app.listen(3001, () => {
     console.log('app started')

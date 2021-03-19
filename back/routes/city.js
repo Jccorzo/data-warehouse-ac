@@ -3,9 +3,9 @@ const cityServices = require('../services/city');
 module.exports = (app) => {
 
     app.post('/city', async (req, res) => {
-        const city = req.body;
+        const { countryId, city } = req.body;
         try {
-            const newCity = await cityServices.createCity(city)
+            const newCity = await cityServices.createCity(countryId, city)
             res.json({ ...newCity._doc })
         } catch (e) {
             res.status(400).json({ message: 'Ocurrió un error creando la ciudad' })
@@ -32,10 +32,10 @@ module.exports = (app) => {
         }
     })
 
-    app.get('/contact', async (_, res) => {
+    app.get('/city', async (_, res) => {
         try {
-            const contacts = await cityServices.getCities()
-            res.json({ contacts })
+            const cities = await cityServices.getCities()
+            res.json({ cities })
         } catch (e) {
             res.status(400).json({ message: 'Ocurrió un error obteniendo las ciudades' })
         }

@@ -40,8 +40,8 @@ export const get = async () => {
     }
 }
 
-export const createCountry = async (country) => {
-    const response = await fetch("http://localhost:3001/region/country", { method: 'POST', body: JSON.stringify(country), headers: { 'Content-Type': 'application/json', 'Authorization': "Bearer " + getItem("token") } })
+export const createCountry = async (regionId, country) => {
+    const response = await fetch("http://localhost:3001/country", { method: 'POST', body: JSON.stringify({ regionId, country }), headers: { 'Content-Type': 'application/json', 'Authorization': "Bearer " + getItem("token") } })
     const data = await response.json()
     if (response.ok) {
         return data
@@ -51,7 +51,7 @@ export const createCountry = async (country) => {
 }
 
 export const updateCountry = async (country) => {
-    const response = await fetch("http://localhost:3001/region/country", { method: 'PUT', body: JSON.stringify(country), headers: { 'Content-Type': 'application/json', 'Authorization': "Bearer " + getItem("token") } })
+    const response = await fetch("http://localhost:3001/country", { method: 'PUT', body: JSON.stringify(country), headers: { 'Content-Type': 'application/json', 'Authorization': "Bearer " + getItem("token") } })
     const data = await response.json()
     if (response.ok) {
         return data
@@ -60,8 +60,8 @@ export const updateCountry = async (country) => {
     }
 }
 
-export const deleteCountry = async (regionId, countryId) => {
-    const response = await fetch(`http://localhost:3001/region/country?regionId=${regionId}&countryId=${countryId}`, { method: 'DELETE', headers: { 'Content-Type': 'application/json', 'Authorization': "Bearer " + getItem("token") } })
+export const deleteCountry = async (countryId) => {
+    const response = await fetch(`http://localhost:3001/country?countryId=${countryId}`, { method: 'DELETE', headers: { 'Content-Type': 'application/json', 'Authorization': "Bearer " + getItem("token") } })
     const data = await response.json()
     if (response.ok) {
         return data
@@ -70,8 +70,8 @@ export const deleteCountry = async (regionId, countryId) => {
     }
 }
 
-export const createCity = async (region) => {
-    const response = await fetch("http://localhost:3001/region/country/city", { method: 'POST', body: JSON.stringify(region), headers: { 'Content-Type': 'application/json', 'Authorization': "Bearer " + getItem("token") } })
+export const createCity = async (countryId, city) => {
+    const response = await fetch("http://localhost:3001/city", { method: 'POST', body: JSON.stringify({ countryId, city }), headers: { 'Content-Type': 'application/json', 'Authorization': "Bearer " + getItem("token") } })
     const data = await response.json()
     if (response.ok) {
         return data
@@ -80,8 +80,8 @@ export const createCity = async (region) => {
     }
 }
 
-export const updateCity = async (region) => {
-    const response = await fetch("http://localhost:3001/region/country/city", { method: 'PUT', body: JSON.stringify(region), headers: { 'Content-Type': 'application/json', 'Authorization': "Bearer " + getItem("token") } })
+export const updateCity = async (city) => {
+    const response = await fetch("http://localhost:3001/city", { method: 'PUT', body: JSON.stringify(city), headers: { 'Content-Type': 'application/json', 'Authorization': "Bearer " + getItem("token") } })
     const data = await response.json()
     if (response.ok) {
         return data
@@ -90,8 +90,8 @@ export const updateCity = async (region) => {
     }
 }
 
-export const deleteCity = async (regionId, countryId, cityId) => {
-    const response = await fetch(`http://localhost:3001/region/country/city?regionId=${regionId}&countryId=${countryId}&cityId=${cityId}`, { method: 'DELETE', headers: { 'Content-Type': 'application/json', 'Authorization': "Bearer " + getItem("token") } })
+export const deleteCity = async (cityId) => {
+    const response = await fetch(`http://localhost:3001/city?cityId=${cityId}`, { method: 'DELETE', headers: { 'Content-Type': 'application/json', 'Authorization': "Bearer " + getItem("token") } })
     const data = await response.json()
     if (response.ok) {
         return data
@@ -100,5 +100,13 @@ export const deleteCity = async (regionId, countryId, cityId) => {
     }
 }
 
-
+export const getCities = async () => {
+    const response = await fetch("http://localhost:3001/city", { headers: { 'Content-Type': 'application/json', 'Authorization': "Bearer " + getItem("token") } })
+    const data = await response.json()
+    if (response.ok) {
+        return data
+    } else {
+        throw new Error(data.message)
+    }
+}
 

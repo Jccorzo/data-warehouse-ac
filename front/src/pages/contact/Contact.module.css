@@ -69,7 +69,7 @@
 
 .table {
     border: 1px solid #e8e8e8;
-    margin-top: 20px;
+    margin-top: 5px;
 }
 
 .row {
@@ -207,4 +207,35 @@
 select:disabled {
     background-color: #C6CACC;
     color: #000000;
+}
+
+.selectedContactsContainer {
+    display: flex;
+    justify-content: space-between;
+}
+
+.selectedContacts {
+    background-color: rgba(142, 199, 252, 0.2);
+    color: #0683F9;
+    width: max-content;
+    padding: 5px;
+    border-radius: 4px;
+}
+
+.deleteContacts {
+    background-color: white;
+    border: none;
+    color: #0683F9;
+    font-size: 16px;
+    padding: 5px;
+}
+
+.deleteContacts:hover {
+    cursor: pointer;
+    opacity: 0.5;
+}
+
+.iconD {
+    color: #1d72c2;
+    margin-right: 5px;
 }

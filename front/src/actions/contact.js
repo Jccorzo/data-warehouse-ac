@@ -1,16 +1,18 @@
-import { CREATE_CONTACT, DELETE_CONTACT, GET_CONTACTS, UPDATE_CONTACT } from '.';
+import { CREATE_CONTACT, DELETE_CONTACT, GET_CONTACTS, UPDATE_CONTACT, SELECT_CONTACT } from '.';
 import * as contactApi from '../api/contact';
 
 const createContactAction = (contact) => ({ type: CREATE_CONTACT, contact })
 const updateContactAction = (contact) => ({ type: UPDATE_CONTACT, contact })
 const deleteContactAction = (contactId) => ({ type: DELETE_CONTACT, contactId })
+
+export const selectContact = (contactId) => ({ type: SELECT_CONTACT, contactId })
 export const getContactsAction = (contacts) => ({ type: GET_CONTACTS, contacts })
 
 export const createContact = (contact) =>
     async (dispatch) => {
         try {
             const newContact = await contactApi.create(contact);
-            dispatch(createContactAction(newContact))
+            dispatch(createContactAction({ ...newContact, selected: false }))
         } catch (e) {
             alert(e.message)
         }
@@ -36,10 +38,20 @@ export const getContacts = () =>
         }
     }
 
-export const deleteContacts = (contacts) =>
+export const deleteContactById = (contactId) =>
     async (dispatch) => {
         try {
-            await contactApi.remove(contacts);
+            await contactApi.deleteContactById(contactId);
+            dispatch(deleteContactAction(contactId))
+        } catch (e) {
+            alert(e.message)
+        }
+    }
+
+export const deleteSelectedContacts = (contacts) =>
+    async (dispatch) => {
+        try {
+            await contactApi.deleteSelectedContacts(contacts);
             contacts.forEach(contactId => {
                 dispatch(deleteContactAction(contactId))
             });
@@ -52,7 +64,7 @@ export const getContactsByWord = (word) =>
     async (dispatch) => {
         try {
             const contacts = await contactApi.getByWord(word)
-            dispatch(getContactsAction(contacts))
+            dispatch(getContactsAction(contacts.map(contact => ({ ...contact, selected: false }))))
         } catch (e) {
             alert(e.message)
         }

@@ -4,7 +4,7 @@ const regionInitial = {
     regions: []
 }
 
-const regionReducer = (state = regionInitial, { type, region, regions, regionId, countryId, cityId }) => {
+const regionReducer = (state = regionInitial, { type, region, regions, regionId, countryId, cityId, city, country }) => {
     switch (type) {
         case CREATE_REGION:
             return {
@@ -29,16 +29,25 @@ const regionReducer = (state = regionInitial, { type, region, regions, regionId,
         case CREATE_COUNTRY:
             return {
                 ...state,
-                regions: state.regions.map((currentRegion) => (currentRegion._id === region._id ? region : currentRegion))
+                regions: state.regions.map((currentRegion) => {
+                    if (currentRegion._id === regionId) {
+                        return {
+                            ...currentRegion,
+                            countries: [country, ...currentRegion.countries]
+                        }
+                    } else {
+                        return currentRegion
+                    }
+                })
             }
         case UPDATE_COUNTRY:
             return {
                 ...state,
                 regions: state.regions.map(currentRegion => {
-                    if (currentRegion._id === region._id) {
+                    if (currentRegion._id === regionId) {
                         return {
                             ...currentRegion,
-                            countries: currentRegion.countries.map(currentCountry => (currentCountry._id === region.country._id ? { ...currentCountry, name: region.country.name } : currentCountry))
+                            countries: currentRegion.countries.map(currentCountry => (currentCountry._id === country._id ? { ...currentCountry, name: country.name } : currentCountry))
                         }
                     } else {
                         return currentRegion
@@ -62,20 +71,38 @@ const regionReducer = (state = regionInitial, { type, region, regions, regionId,
         case CREATE_CITY:
             return {
                 ...state,
-                regions: state.regions.map((currentRegion) => (currentRegion._id === region._id ? region : currentRegion))
+                regions: state.regions.map((currentRegion) => {
+                    if (currentRegion._id == regionId) {
+                        return {
+                            ...currentRegion,
+                            countries: currentRegion.countries.map(currentCountry => {
+                                if (currentCountry._id === countryId) {
+                                    return {
+                                        ...currentCountry,
+                                        cities: [city, ...currentCountry.cities]
+                                    }
+                                } else {
+                                    return currentCountry
+                                }
+                            })
+                        }
+                    } else {
+                        return currentRegion
+                    }
+                })
             }
         case UPDATE_CITY:
             return {
                 ...state,
                 regions: state.regions.map(currentRegion => {
-                    if (currentRegion._id === region._id) {
+                    if (currentRegion._id === regionId) {
                         return {
                             ...currentRegion,
                             countries: currentRegion.countries.map(currentCountry => {
-                                if (currentCountry._id === region.country._id) {
+                                if (currentCountry._id === countryId) {
                                     return {
                                         ...currentCountry,
-                                        cities: currentCountry.cities.map(currentCity => (currentCity._id === region.country.city._id ? { ...currentCity, name: region.country.city.name } : currentCity))
+                                        cities: currentCountry.cities.map(currentCity => (currentCity._id === city._id ? { ...currentCity, name: city.name } : currentCity))
                                     }
                                 } else {
                                     return currentCountry

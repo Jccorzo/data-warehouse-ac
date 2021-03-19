@@ -4,12 +4,13 @@ import { useSelector, useDispatch } from 'react-redux';
 import { createCompany, deleteCompany, getCompanies, updateCompany } from '../../actions/company';
 import Button from '../../components/common/button/Button';
 import Modal from '../../components/common/modal/Modal';
+import { getCities } from '../../actions/city';
 
 const initCompany = () => ({ name: '', address: '', email: '', phone: '', city: '' })
 
 const CompanyPage = () => {
     const dispatch = useDispatch()
-    const regions = useSelector(state => state.region.regions)
+    const cities = useSelector(state => state.city.cities)
     const companies = useSelector(state => state.company.companies)
     const [newCompany, setNewCompany] = useState(initCompany())
     const [modalVisible, setModalVisible] = useState(false)
@@ -52,7 +53,7 @@ const CompanyPage = () => {
                 <div className={styles.item}>{company.address}</div>
                 <div className={styles.item}>{company.email}</div>
                 <div className={styles.item}>{company.phone}</div>
-                <div className={styles.item}>{company.city}</div>
+                <div className={styles.item}>{company.city ? company.city.name : ''}</div>
                 <div className={`${styles.item} ${styles.actionsContainer}`}>
                     <i className={`fa fa-trash ${styles.action}`} onClick={() => dispatch(deleteCompany(company._id))}></i>
                     <i className={`fa fa-pencil ${styles.action}`} onClick={() => changeToUpdateUser(company)}></i>
@@ -64,26 +65,9 @@ const CompanyPage = () => {
         dispatch(getCompanies())
     }, [])
 
-    const cities = useMemo(() => {
-        if (regions.length > 0) {
-            const cities2 = regions.reduce((previous, current) => {
-                const cities1 = []
-                if (current.countries.length > 0) {
-                    current.countries.forEach((country) => {
-                        if (country.cities.length > 0) {
-                            const y = country.cities
-                            const x = [].concat(y)
-                            const u = cities1.push(...x)
-                        }
-                    })
-                }
-                return [...previous, ...cities1]
-            }, [])
-            return cities2
-        } else {
-            return []
-        }
-    }, [])
+    useEffect(() => {
+        dispatch(getCities())
+    },[])
 
     return (
         <main className={styles.name}>
@@ -128,7 +112,7 @@ const CompanyPage = () => {
                         <label htmlFor={'city'}>Ciudad:</label>
                         <select className={styles.input} name='city' defaultValue={"-"} required={true} onChange={handleInputChange}>
                             <option disabled value={"-"} >Ciudad</option>
-                            {cities.map((city) => <option key={city._id} value={city.name}>{city.name}</option>)}
+                            {cities.map((city) => <option key={city._id} value={city._id}>{city.name}</option>)}
                         </select>
                     </div>
                     <Button title={'Guardar'} />

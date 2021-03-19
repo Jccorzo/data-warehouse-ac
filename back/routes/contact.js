@@ -24,12 +24,22 @@ module.exports = (app) => {
     })
 
     app.delete('/contact', async (req, res) => {
-        const contactId = req.query.contactId;
+        const contactIds = req.query.contactIds;
+        try {
+            await contactServices.deleteSelectedContacts(contactIds)
+            res.json({ message: "Contactos eliminados correctamente" })
+        } catch (e) {
+            res.status(400).json({ message: 'Ocurrió un error eliminandos los contactos' })
+        }
+    })
+
+    app.delete('/contact/:contactId', async (req, res) => {
+        const contactId = req.params.contactId;
         try {
             await contactServices.deleteContact(contactId)
-            res.json({ message: "Contacto eliminado correctamente" })
+            res.json({ message: "Contactos eliminados correctamente" })
         } catch (e) {
-            res.status(400).json({ message: 'Ocurrió un error eliminando el contacto' })
+            res.status(400).json({ message: 'Ocurrió un error eliminandos los contactos' })
         }
     })
 

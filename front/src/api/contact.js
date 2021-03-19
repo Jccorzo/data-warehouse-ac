@@ -30,8 +30,18 @@ export const get = async () => {
     }
 }
 
-export const remove = async (contactId) => {
-    const response = await fetch(`http://localhost:3001/company?companyId=${contactId}`, { method: 'DELETE', headers: { 'Content-Type': 'application/json', 'Authorization': "Bearer " + getItem("token") } })
+export const deleteSelectedContacts = async (contactIds) => {
+    const response = await fetch(`http://localhost:3001/contact?contactIds=${contactIds}`, { method: 'DELETE', headers: { 'Content-Type': 'application/json', 'Authorization': "Bearer " + getItem("token") } })
+    const data = await response.json()
+    if (response.ok) {
+        return data
+    } else {
+        throw new Error(data.message)
+    }
+}
+
+export const deleteContactById = async (contactId) => {
+    const response = await fetch(`http://localhost:3001/contact/${contactId}`, { method: 'DELETE', headers: { 'Content-Type': 'application/json', 'Authorization': "Bearer " + getItem("token") } })
     const data = await response.json()
     if (response.ok) {
         return data

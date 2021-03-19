@@ -1,12 +1,12 @@
-const { Country, Region } = require('../models/index');
+const { Country, Region, City } = require('../models/index');
 
 exports.createCountry = async (regionId, country) => {
-    return Country.create(country).then(docCountry => {
-        return Region.findByIdAndUpdate(regionId, {
-            $push: { countries: { ...docCountry } }
-        },
-            { new: true, useFindAndModify: false })
-    })
+    const newCountry = await Country.create(country)
+    await Region.findByIdAndUpdate(regionId, {
+        $push: { countries: { ...newCountry } }
+    },
+        { new: true, useFindAndModify: false })
+    return newCountry
 }
 
 exports.updateCountry = async (country) => {
@@ -14,5 +14,7 @@ exports.updateCountry = async (country) => {
 }
 
 exports.deleteCountry = async (countryId) => {
-    await Country.findByIdAndDelete(countryId)
+    const country = await Country.findById(countryId)
+    await City.deleteMany({_id: {$in: country.cities}})
+    await country.remove()
 }

@@ -1,6 +1,6 @@
 const { Company } = require('../models/index');
 
-exports.getAll = async () => await Company.find()
+exports.getAll = async () => await Company.find().populate('city')
 
 exports.createCompany = async (company) => await Company.create(company);
 

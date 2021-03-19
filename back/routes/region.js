@@ -18,7 +18,7 @@ module.exports = (app) => {
             await regionServices.updateRegion(region);
             res.json({ message: "Región actualizada correctamente" })
         } catch (e) {
-            res.status(400).json({ message: "Ocurrió un error creando la región" })
+            res.status(400).json({ message: "Ocurrió un error actualizando la región" })
         }
     })
 
@@ -28,7 +28,8 @@ module.exports = (app) => {
             await regionServices.deleteRegion(regionId)
             res.json({ message: "Region eliminada exitosamente" })
         } catch (e) {
-            res.status(400).json({ message: "Ocurrió un error creando la región" })
+            console.log(e)
+            res.status(400).json({ message: "Ocurrió un error eliminando la región" })
         }
     })
 
@@ -37,7 +38,7 @@ module.exports = (app) => {
             const regions = await regionServices.getAllRegions();
             res.json({ regions })
         } catch (e) {
-            res.status(400).json({ message: "Ocurrió un error creando la región" })
+            res.status(400).json({ message: "Ocurrió un error obteniendo la región" })
         }
     })
 }

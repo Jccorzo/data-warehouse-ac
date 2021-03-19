@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import styles from './Contact.module.css';
 import Modal from '../../components/common/modal/Modal';
 import { useDispatch, useSelector } from 'react-redux';
-import { createContact, deleteContacts, getContacts, updateContact, getContactsByWord, getContactsAction } from '../../actions/contact';
+import { createContact, deleteContactById, getContacts, updateContact, getContactsByWord, getContactsAction, selectContact, deleteSelectedContacts } from '../../actions/contact';
 
 const resetContact = () => ({
     name: '',
@@ -54,9 +54,7 @@ const ContactPage = () => {
     const [chargeAsc, setChargeAsc] = useState(true);
     const [interestAsc, setInterestAsc] = useState(true);
 
-    const [selectedContacts, setSelectedContacts] = useState([]);
-
-    const [contactModal, setContactModal] = useState(true);
+    const [contactModal, setContactModal] = useState(false);
     const [contactAction, setContactAction] = useState('Nuevo contacto')
 
     const [contact, setContact] = useState(resetContact())
@@ -68,20 +66,22 @@ const ContactPage = () => {
     const [channels] = useState(["Teléfono", "Email", "WhatsApp", "Facebook", "Twitter"])
 
     const contacts = useSelector(state => state.contact.contacts)
+    const selectedContacts = contacts.filter(contact => contact.selected === true)
     const contactList = useMemo(() => (
         contacts.map(contact => (
             <div className={styles.row}>
-                <div className={styles.item}><input className={styles.check} type={'checkbox'} /></div>
+                <div className={styles.item}><input className={styles.check} type={'checkbox'} value={contact.selected} onChange={() => dispatch(selectContact(contact._id))} /></div>
                 <div className={styles.item}><p>{contact.name}</p><p>{contact.email}</p></div>
                 <div className={styles.item}><p>{contact.country}</p><p>{contact.region}</p></div>
                 <div className={styles.item}>{contact.company}</div>
                 <div className={styles.item}>{contact.position}</div>
-                <div className={styles.item}>{contact.channels.filter(channel => channel.preference === true).map(channel =>(<div>{channel.name}</div>))}</div>
+                <div className={styles.item}>{contact.channels.filter(channel => channel.preference === true).map(channel => (<div>{channel.name}</div>))}</div>
                 <div className={styles.item}>{contact.interest}%</div>
                 <div className={styles.item}></div>
             </div>
         ))
     ), [contacts])
+
 
     console.log(contacts)
 
@@ -104,21 +104,6 @@ const ContactPage = () => {
 
     const sortBy = (attribute, array, asc) => {
         dispatch(getContactsAction(sort(attribute, array, asc)))
-    }
-
-    const addContactToSelected = (contact) => {
-        setSelectedContacts([contact, ...selectedContacts])
-    }
-
-    const removeSelectedContact = (contact) => {
-        setSelectedContacts(selectedContacts.filter(currentContact => currentContact !== contact))
-    }
-
-    const removeContacts = (contacts = []) => {
-        dispatch(deleteContacts(contacts))
-        contacts.forEach(currentContact => {
-            removeSelectedContact(currentContact)
-        })
     }
 
     const handleInputChange = (event) => {
@@ -181,6 +166,7 @@ const ContactPage = () => {
                     <button onClick={modalAction} className={styles.addContact}>Agregar contacto</button>
                 </div>
             </div>
+            {selectedContacts.length > 0 ? <div className={styles.selectedContactsContainer}><p className={styles.selectedContacts}>{`${selectedContacts.length} seleccionados`}</p> <button onClick={() => dispatch(deleteSelectedContacts(selectedContacts.map(contact => contact._id)))} className={styles.deleteContacts}> <i className={`fa fa-trash ${styles.iconD}`}></i> Eliminar contactos</button>  </div> : null}
             <div className={styles.table}>
                 <div className={styles.row} style={{ height: 66.5, borderBottom: '1px solid #e8e8e8' }}>
                     <div className={`${styles.item} ${styles.header}`}> <input className={styles.check} type={'checkbox'} /> </div>

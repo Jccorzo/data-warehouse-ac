@@ -55,15 +55,15 @@ const RegionPage = () => {
         if (regionAction === 'Nueva región') {
             dispatch(createRegion({ name: name }))
         } else if (regionAction === 'Nuevo país') {
-            dispatch(createCountry({ ...regionToEdit, country: { name: name } }))
+            dispatch(createCountry(regionToEdit._id, { name: name }))
         } else if (regionAction === 'Nueva ciudad') {
-            dispatch(createCity({ ...regionToEdit, country: { ...regionToEdit.country, city: { name: name, code: name.toLowerCase().slice(0, 3) } } }))
+            dispatch(createCity(regionToEdit._id, regionToEdit.country._id, { name: name, code: name.toLowerCase().slice(0, 3) }))
         } else if (regionAction === 'Editar región') {
             dispatch(updateRegion({ ...regionToEdit, name: name }))
         } else if (regionAction === 'Editar país') {
-            dispatch(updateCountry({ _id: regionToEdit._id, country: { _id: regionToEdit.country._id, name: name } }))
+            dispatch(updateCountry(regionToEdit._id, { _id: regionToEdit.country._id, name: name }))
         } else if (regionAction === 'Editar ciudad') {
-            dispatch(updateCity({ _id: regionToEdit._id, country: { _id: regionToEdit.country._id, city: { _id: regionToEdit.country.city._id, name: name, code: name.toLowerCase().slice(0, 3) } } }))
+            dispatch(updateCity(regionToEdit._id, regionToEdit.country._id, { _id: regionToEdit.country.city._id, name: name, code: name.toLowerCase().slice(0, 3) }))
         }
         setName('')
         setModalRegion(false)

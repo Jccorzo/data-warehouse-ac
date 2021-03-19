@@ -17,7 +17,6 @@ const companyReducer = (state = companyInitial, { type, company, companyId, comp
                 companies: state.companies.map(currentCompany => (currentCompany._id === company._id ? company : currentCompany))
             }
         case DELETE_COMPANY:
-            console.log(state.companies.filter(currentCompany => currentCompany._id !== companyId))
             return {
                 ...state,
                 companies: state.companies.filter(currentCompany => currentCompany._id !== companyId)

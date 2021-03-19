@@ -602,13 +602,45 @@ paths:
         - bearerAuth: []
       summary: "delete contacts"
       parameters:
-        - name: contactId
+        - name: contactIds
           in: query
           required: true
           schema:
             type: "array"
             items: 
               type: "string"
+      responses:
+        "200":
+          description: "delete succesfull"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties: 
+                  name: 
+                    type: "string"
+                  price:
+                    type: "number"
+        "401":
+          description: "authentication errors"
+          content:
+            application/json:
+              schema:
+                type: "object"
+                properties: 
+                  mensaje:
+                    type: "string"
+  /contact/{contactId}:
+    delete:
+      security:
+        - bearerAuth: []
+      summary: "delete contacts"
+      parameters:
+        - name: contactId
+          in: path
+          required: true
+          schema:
+            type: "string"
       responses:
         "200":
           description: "delete succesfull"

@@ -1,16 +1,16 @@
 const { City, Country } = require('../models/index');
 
 exports.createCity = async (countryId, city) => {
-    return City.create(city).then(docCity => {
-        return Country.findByIdAndUpdate(countryId, {
-            $push: { cities: { ...docCity } }
-        },
-            { new: true, useFindAndModify: false })
-    })
+    const newCity = await City.create(city)
+    await Country.findByIdAndUpdate(countryId, {
+        $push: { cities: { ...newCity } }
+    },
+        { new: true, useFindAndModify: false })
+    return newCity
 }
 
 exports.updateCity = async (city) => {
-    await City.findByIdAndUpdate(city._id, city)
+    await City.findByIdAndUpdate(city._id, city, { useFindAndModify: false })
 }
 
 exports.deleteCity = async (cityId) => {

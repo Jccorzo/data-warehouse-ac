@@ -2,9 +2,9 @@ const { Contact } = require('../models/index');
 
 exports.getContacts = async (word = '') => {
     if (word) {
-        return await Contact.find().populate()
+        return await Contact.find().populate('region').populate('country').populate('city').populate('company')
     } else {
-        await Contact.find({ $text: word })
+        await Contact.find({ $text: word }).populate('region').populate('country').populate('city').populate('company')
     }
 }
 
@@ -16,4 +16,8 @@ exports.updateContact = async (contact) => {
 
 exports.deleteContact = async (contactId) => {
     await Contact.findByIdAndDelete(contactId)
+}
+
+exports.deleteSelectedContacts = async (contactIds) => {
+    await Contact.deleteMany({ _id: { $in: contactIds } })
 }

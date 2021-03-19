@@ -40,7 +40,6 @@ export const deleteCompany = (companyId) =>
     async (dispatch) => {
         try {
             await companyApi.remove(companyId);
-            console.log(companyId)
             dispatch(deleteCompanyAction(companyId))
         } catch (e) {
             alert(e.message)
