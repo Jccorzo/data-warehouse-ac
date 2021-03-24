@@ -19,15 +19,15 @@ app.use(bodyParser.json());
 app.use(cors())
 app.use('*', middlewares.validateLogin);
 
-mongoose.set('useUnifiedTopology',true);
+mongoose.set('useUnifiedTopology', true);
 
 // CONECTAR A LA BASE DE DATOS MONGO
-mongoose.connect(config.url,{
-    useNewUrlParser:true
-}).then(()=> {
+mongoose.connect(config.url, {
+    useNewUrlParser: true
+}).then(() => {
     console.log("conexion exitosa con la base de datos");
-}).catch( err => {
-    console.log('no se pudo conectar a la base de datos',  err);
+}).catch(err => {
+    console.log('no se pudo conectar a la base de datos', err);
     process.exit();
 });
 

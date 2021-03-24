@@ -80,6 +80,10 @@
     justify-content: flex-start;
 }
 
+.row:hover {
+    background-color: rgba(0,0,0,0.05);;
+}
+
 .item {
     display: flex;
     align-items: center;
@@ -238,4 +242,19 @@ select:disabled {
 .iconD {
     color: #1d72c2;
     margin-right: 5px;
+}
+
+.actionsContainer > i {
+    font-size: 18px;
+    color: rgba(0,0,0,0.50);
+    margin: 0px 5px;
+}
+
+.actionsContainer > i:hover {
+    cursor: pointer;
+    opacity: 0.5;
+}
+
+.threeDots {
+    
 }

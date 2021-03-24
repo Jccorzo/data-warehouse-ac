@@ -26,9 +26,10 @@ module.exports = (app) => {
     app.delete('/contact', async (req, res) => {
         const contactIds = req.query.contactIds;
         try {
-            await contactServices.deleteSelectedContacts(contactIds)
+            await contactServices.deleteSelectedContacts(contactIds.split(","))
             res.json({ message: "Contactos eliminados correctamente" })
         } catch (e) {
+            console.log(e)
             res.status(400).json({ message: 'Ocurrió un error eliminandos los contactos' })
         }
     })
@@ -44,11 +45,12 @@ module.exports = (app) => {
     })
 
     app.get('/contact', async (req, res) => {
-        const word = req.query;
+        const word = req.query.word;
         try {
             const contacts = await contactServices.getContacts(word)
             res.json({ contacts })
         } catch (e) {
+            console.log(e)
             res.status(400).json({ message: 'Ocurrió un error obteniendo los contactos' })
         }
     })

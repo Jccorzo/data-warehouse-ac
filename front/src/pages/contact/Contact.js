@@ -69,15 +69,15 @@ const ContactPage = () => {
     const selectedContacts = contacts.filter(contact => contact.selected === true)
     const contactList = useMemo(() => (
         contacts.map(contact => (
-            <div className={styles.row}>
+            <div key={contact._id} className={styles.row}>
                 <div className={styles.item}><input className={styles.check} type={'checkbox'} value={contact.selected} onChange={() => dispatch(selectContact(contact._id))} /></div>
                 <div className={styles.item}><p>{contact.name}</p><p>{contact.email}</p></div>
-                <div className={styles.item}><p>{contact.country}</p><p>{contact.region}</p></div>
-                <div className={styles.item}>{contact.company}</div>
+                <div className={styles.item}><p>{contact.country?.name}</p><p>{contact.region?.name}</p></div>
+                <div className={styles.item}>{contact.company?.name}</div>
                 <div className={styles.item}>{contact.position}</div>
                 <div className={styles.item}>{contact.channels.filter(channel => channel.preference === true).map(channel => (<div>{channel.name}</div>))}</div>
                 <div className={styles.item}>{contact.interest}%</div>
-                <div className={styles.item}></div>
+                <div className={`${styles.item} ${styles.actionsColumn}`}> <div className={styles.threeDots}></div>  <div className={styles.actionsContainer}><i className={'fa fa-pencil'}></i>  <i className={'fa fa-trash'} onClick={() => dispatch(deleteContactById(contact._id))} ></i></div></div>
             </div>
         ))
     ), [contacts])
@@ -113,23 +113,35 @@ const ContactPage = () => {
         setContact(contact => ({ ...contact, [name]: value }))
     }
 
+    const handleSelectChange = (event, array) => {
+        const target = event.target;
+        const value = target.value;
+        const name = target.name;
+        const item = findById(value, array)
+        setContact(contact => ({ ...contact, [name]: { _id: item._id, name: item.name } }))
+    }
+
     const handleInputChangeForChannels = (event, pos, att) => {
         const value = event.target.value;
         setContact(contact => ({ ...contact, channels: contact.channels.map((channel, index) => (index === pos ? ({ ...channel, [att]: value }) : channel)) }))
     }
 
+    const selectCompany = (event) => {
+        handleSelectChange(event, companies)
+    }
+
     const selectRegion = (event) => {
-        handleInputChange(event)
+        handleSelectChange(event, regions)
         setSelectedRegion(findById(event.target.value, regions))
     }
 
     const selectCountry = (event) => {
-        handleInputChange(event)
+        handleSelectChange(event, selectedRegion.countries)
         setSelectedCountry(findById(event.target.value, selectedRegion.countries))
     }
 
     const selectCity = (event) => {
-        handleInputChange(event)
+        handleSelectChange(event, selectedCountry.cities)
         setSelectedCity(findById(event.target.value, selectedCountry.cities))
     }
 
@@ -140,16 +152,11 @@ const ContactPage = () => {
     const onSubmit = (event) => {
         event.preventDefault();
         console.log(contact)
-        if (!contact.company) {
-            alert('company vacío')
-        } else {
-            dispatch(createContact(contact))
-        }
-        //setContact(resetContact())
-        //setSelectedCity({_id:''})
-        //setSelectedCountry({_id: '', cities: []})
-        //setSelectedRegion({_id: '', countries: []})
-
+        dispatch(createContact(contact))
+        setContact(resetContact())
+        setSelectedCity({ _id: '' })
+        setSelectedCountry({ _id: '', cities: [] })
+        setSelectedRegion({ _id: '', countries: [] })
     }
 
     return (
@@ -207,8 +214,8 @@ const ContactPage = () => {
                             </div>
                             <div className={styles.inputContainer}>
                                 <label className={styles.important} htmlFor={'company'}>Compañia:</label>
-                                <select className={styles.input} name='company' defaultValue={"-"} required={true} onChange={handleInputChange}>
-                                    <option disabled value={"-"} >Compañía</option>
+                                <select className={styles.input} name='company' defaultValue={""} required={true} onChange={selectCompany}>
+                                    <option disabled value={""} >Compañía</option>
                                     {companies.map((company) => <option key={company._id} value={company._id}>{company.name}</option>)}
                                 </select>
                             </div>
@@ -218,23 +225,23 @@ const ContactPage = () => {
                     <div className={styles.secondaryData}>
                         <div className={styles.inputContainer}>
                             <label htmlFor={'region'}>Region:</label>
-                            <select className={styles.input} name='region' defaultValue={"-"} required={true} onChange={selectRegion}>
-                                <option disabled value={"-"} >Region</option>
+                            <select className={styles.input} name='region' defaultValue={""} required={true} onChange={selectRegion}>
+                                <option disabled value={""} >Region</option>
                                 {regions.map((region) => <option key={region._id} value={region._id}>{region.name}</option>)}
                             </select>
                         </div>
                         <div className={styles.inputContainer}>
                             <label htmlFor={'country'}>País:</label>
-                            <select className={styles.input} name='country' disabled={selectedRegion._id ? false : true} defaultValue={"-"} required={true} onChange={selectCountry}>
-                                <option disabled value={"-"} >País</option>
-                                {selectedRegion.countries.map((region) => <option key={region._id} value={region._id}>{region.name}</option>)}
+                            <select className={styles.input} name='country' disabled={selectedRegion._id ? false : true} defaultValue={""} required={true} onChange={selectCountry}>
+                                <option disabled value={""} >País</option>
+                                {selectedRegion.countries.map((country) => <option key={country._id} value={country._id}>{country.name}</option>)}
                             </select>
                         </div>
                         <div className={styles.inputContainer}>
                             <label htmlFor={'city'}>Ciudad:</label>
-                            <select className={styles.input} name='city' defaultValue={"-"} disabled={selectedCountry._id ? false : true} required={true} onChange={selectCity}>
-                                <option disabled value={"-"} >Ciudad</option>
-                                {selectedCountry.cities.map((region) => <option key={region._id} value={region._id}>{region.name}</option>)}
+                            <select className={styles.input} name='city' defaultValue={""} disabled={selectedCountry._id ? false : true} required={true} onChange={selectCity}>
+                                <option disabled value={""} >Ciudad</option>
+                                {selectedCountry.cities.map((city) => <option key={city._id} value={city._id}>{city.name}</option>)}
                             </select>
                         </div>
                         <div className={styles.inputContainer}>

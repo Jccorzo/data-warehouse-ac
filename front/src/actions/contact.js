@@ -63,8 +63,8 @@ export const deleteSelectedContacts = (contacts) =>
 export const getContactsByWord = (word) =>
     async (dispatch) => {
         try {
-            const contacts = await contactApi.getByWord(word)
-            dispatch(getContactsAction(contacts.map(contact => ({ ...contact, selected: false }))))
+            const data = await contactApi.getByWord(word)
+            dispatch(getContactsAction(data.contacts.map(contact => ({ ...contact, selected: false }))))
         } catch (e) {
             alert(e.message)
         }
