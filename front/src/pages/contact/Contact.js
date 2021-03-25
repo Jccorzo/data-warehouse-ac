@@ -61,29 +61,37 @@ const ContactPage = () => {
 
     const [selectedRegion, setSelectedRegion] = useState({ _id: '', countries: [] });
     const [selectedCountry, setSelectedCountry] = useState({ _id: '', cities: [] });
-    const [selectedCity, setSelectedCity] = useState({ _id: '' });
+    const [_, setSelectedCity] = useState({ _id: '' });
 
     const [channels] = useState(["Teléfono", "Email", "WhatsApp", "Facebook", "Twitter"])
 
+    const getColor = (interest) => {
+        if (interest === 25) {
+            return '#1CC1F5'
+        } else if (interest === 50) {
+            return '#FFC700'
+        } else if (interest === 75) {
+            return '#FF6F00'
+        } else if (interest === 100) {
+            return '#DE0028'
+        }
+    }
+
     const contacts = useSelector(state => state.contact.contacts)
     const selectedContacts = contacts.filter(contact => contact.selected === true)
-    const contactList = useMemo(() => (
+    const contactList =
         contacts.map(contact => (
             <div key={contact._id} className={styles.row}>
                 <div className={styles.item}><input className={styles.check} type={'checkbox'} value={contact.selected} onChange={() => dispatch(selectContact(contact._id))} /></div>
-                <div className={styles.item}><p>{contact.name}</p><p>{contact.email}</p></div>
-                <div className={styles.item}><p>{contact.country?.name}</p><p>{contact.region?.name}</p></div>
-                <div className={styles.item}>{contact.company?.name}</div>
-                <div className={styles.item}>{contact.position}</div>
-                <div className={styles.item}>{contact.channels.filter(channel => channel.preference === true).map(channel => (<div>{channel.name}</div>))}</div>
-                <div className={styles.item}>{contact.interest}%</div>
-                <div className={`${styles.item} ${styles.actionsColumn}`}> <div className={styles.threeDots}></div>  <div className={styles.actionsContainer}><i className={'fa fa-pencil'}></i>  <i className={'fa fa-trash'} onClick={() => dispatch(deleteContactById(contact._id))} ></i></div></div>
+                <div className={styles.item}><p className={styles.text}>{contact.name}</p><p className={styles.subtext}>{contact.email}</p></div>
+                <div className={styles.item}><p className={styles.text}>{contact.country?.name}</p><p className={styles.subtext}>{contact.region?.name}</p></div>
+                <div className={styles.item}><p className={styles.text}>{contact.company?.name}</p></div>
+                <div className={styles.item}><p className={styles.text}>{contact.position}</p></div>
+                <div className={styles.item} style={{ flexDirection: 'row', alignItems: 'center' }}><p className={styles.text} style={{ width: 24 }}>{contact.interest}%</p> <div className={styles.interestBarContainer}> <div className={styles.interestBarDown} /> <div className={styles.interestBarUp} style={{ backgroundColor: getColor(contact.interest), width: `${contact.interest}%` }} /> </div></div>
+                <div className={`${styles.item} ${styles.actionsColumn}`} style={{ alignItems: 'center' }}> <div className={styles.threeDots}></div>  <div className={styles.actionsContainer}><i className={'fa fa-pencil'}></i>  <i className={'fa fa-trash'} onClick={() => dispatch(deleteContactById(contact._id))} ></i></div></div>
             </div>
         ))
-    ), [contacts])
 
-
-    console.log(contacts)
 
     const regions = useSelector(state => state.region.regions)
     const companies = useSelector(state => state.company.companies)
@@ -94,16 +102,28 @@ const ContactPage = () => {
 
     const getContactsBy = () => dispatch(getContactsByWord(search))
 
-    const sort = (attribute, array = [], asc = true) => {
+    const sortAtt = (attribute, array = [], asc = true) => {
         if (array.length > 0) {
-            return array.sort((a, b) => asc ? a[attribute] - b[attribute] : b[attribute] - a[attribute])
+            return array.sort((a, b) => asc ? (a[attribute] > b[attribute] ? 1 : -1) : (a[attribute] < b[attribute] ? 1 : -1))
         } else {
             return array
         }
     }
 
+    const sortAtts = (att1, att2, array = [], asc = true) => {
+        if (array.length > 0) {
+            return array.sort((a, b) => asc ? (a[att1][att2] > b[att1][att2] ? 1 : -1) : (a[att1][att2] < b[att1][att2] ? 1 : -1))
+        } else {
+            return array
+        }
+    }
+
+    const sortBySubAttibutes = (att1, att2, array, asc) => {
+        dispatch(getContactsAction(sortAtts(att1, att2, array, asc)))
+    }
+
     const sortBy = (attribute, array, asc) => {
-        dispatch(getContactsAction(sort(attribute, array, asc)))
+        dispatch(getContactsAction(sortAtt(attribute, array, asc)))
     }
 
     const handleInputChange = (event) => {
@@ -151,12 +171,12 @@ const ContactPage = () => {
 
     const onSubmit = (event) => {
         event.preventDefault();
-        console.log(contact)
         dispatch(createContact(contact))
         setContact(resetContact())
         setSelectedCity({ _id: '' })
         setSelectedCountry({ _id: '', cities: [] })
         setSelectedRegion({ _id: '', countries: [] })
+        setContactModal(false)
     }
 
     return (
@@ -175,13 +195,12 @@ const ContactPage = () => {
             </div>
             {selectedContacts.length > 0 ? <div className={styles.selectedContactsContainer}><p className={styles.selectedContacts}>{`${selectedContacts.length} seleccionados`}</p> <button onClick={() => dispatch(deleteSelectedContacts(selectedContacts.map(contact => contact._id)))} className={styles.deleteContacts}> <i className={`fa fa-trash ${styles.iconD}`}></i> Eliminar contactos</button>  </div> : null}
             <div className={styles.table}>
-                <div className={styles.row} style={{ height: 66.5, borderBottom: '1px solid #e8e8e8' }}>
-                    <div className={`${styles.item} ${styles.header}`}> <input className={styles.check} type={'checkbox'} /> </div>
-                    <div className={`${styles.item} ${styles.header}`} onClick={() => { sortBy('contact', contacts, nameAsc); setNameAsc(!nameAsc) }}>Contacto <img className={styles.sort} src={'../images/sort.jpeg'} /></div>
-                    <div className={`${styles.item} ${styles.header}`} onClick={() => { sortBy('region', contacts, regionAsc); setRegionAsc(!regionAsc) }}>País/Región <img className={styles.sort} src={'../images/sort.jpeg'} /> </div>
-                    <div className={`${styles.item} ${styles.header}`} onClick={() => { sortBy('company', contacts, companyAsc); setCompanyAsc(!companyAsc) }}>Compañía <img className={styles.sort} src={'../images/sort.jpeg'} /></div>
-                    <div className={`${styles.item} ${styles.header}`} onClick={() => { sortBy('charge', contacts, chargeAsc); setChargeAsc(!chargeAsc) }}>Cargo <img className={styles.sort} src={'../images/sort.jpeg'} /></div>
-                    <div className={`${styles.item} ${styles.header}`}>Canal preferido</div>
+                <div className={`${styles.row} ${styles.firstRow}`} style={{ height: 66.5, borderBottom: '1px solid #e8e8e8' }}>
+                    <div className={`${styles.item} ${styles.header}`} style={{ flexDirection: 'column' }}> <input className={styles.check} type={'checkbox'} /> </div>
+                    <div className={`${styles.item} ${styles.header}`} onClick={() => { sortBy('name', contacts, nameAsc); setNameAsc(!nameAsc) }}>Contacto <img className={styles.sort} src={'../images/sort.jpeg'} /></div>
+                    <div className={`${styles.item} ${styles.header}`} onClick={() => { sortBySubAttibutes('country', 'name', contacts, regionAsc); setRegionAsc(!regionAsc) }}>País/Región <img className={styles.sort} src={'../images/sort.jpeg'} /> </div>
+                    <div className={`${styles.item} ${styles.header}`} onClick={() => { sortBySubAttibutes('company', 'name', contacts, companyAsc); setCompanyAsc(!companyAsc) }}>Compañía <img className={styles.sort} src={'../images/sort.jpeg'} /></div>
+                    <div className={`${styles.item} ${styles.header}`} onClick={() => { sortBy('position', contacts, chargeAsc); setChargeAsc(!chargeAsc) }}>Cargo <img className={styles.sort} src={'../images/sort.jpeg'} /></div>
                     <div className={`${styles.item} ${styles.header}`} onClick={() => { sortBy('interest', contacts, interestAsc); setInterestAsc(!interestAsc) }}>Interés <img className={styles.sort} src={'../images/sort.jpeg'} /></div>
                     <div className={`${styles.item} ${styles.header}`}>Acciones</div>
                 </div>
