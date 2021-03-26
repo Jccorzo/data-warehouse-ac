@@ -4,7 +4,7 @@ const contactInitial = {
     contacts: []
 }
 
-const contactReducer = (state = contactInitial, { type, contact, contactId, contacts }) => {
+const contactReducer = (state = contactInitial, { type, contact, contactId, contacts, selected }) => {
     switch (type) {
         case CREATE_CONTACT:
             return {
@@ -29,7 +29,7 @@ const contactReducer = (state = contactInitial, { type, contact, contactId, cont
         case SELECT_CONTACT: {
             return {
                 ...state,
-                contacts: state.contacts.map(contact => (contact._id === contactId ? { ...contact, selected: !contact.selected } : contact))
+                contacts: state.contacts.map(contact => (contact._id === contactId ? { ...contact, selected: selected } : contact))
             }
         }
         default: return state

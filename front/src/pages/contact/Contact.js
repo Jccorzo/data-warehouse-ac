@@ -2,17 +2,29 @@ import React, { useEffect, useMemo, useState } from 'react';
 import styles from './Contact.module.css';
 import Modal from '../../components/common/modal/Modal';
 import { useDispatch, useSelector } from 'react-redux';
-import { createContact, deleteContactById, getContacts, updateContact, getContactsByWord, getContactsAction, selectContact, deleteSelectedContacts } from '../../actions/contact';
+import { createContact, deleteContactById, getContacts, updateContact, getContactsByWord, getContactsAction, selectContact, deleteSelectedContacts, selectAllContacts } from '../../actions/contact';
 
 const resetContact = () => ({
     name: '',
     lastname: '',
     position: '',
     email: '',
-    company: '',
-    region: '',
-    country: '',
-    city: '',
+    company: {
+        _id: "",
+        name: ""
+    },
+    region: {
+        _id: "",
+        name: ""
+    },
+    country: {
+        _id: "",
+        name: ""
+    },
+    city: {
+        _id: "",
+        name: ""
+    },
     address: '',
     interest: 0,
     channels: [
@@ -82,7 +94,7 @@ const ContactPage = () => {
     const contactList =
         contacts.map(contact => (
             <div key={contact._id} className={styles.row}>
-                <div className={styles.item}><input className={styles.check} type={'checkbox'} value={contact.selected} onChange={() => dispatch(selectContact(contact._id))} /></div>
+                <div className={styles.item}><input className={styles.check} type={'checkbox'} checked={contact.selected} onChange={(evt) => dispatch(selectContact(contact._id, evt.target.checked))} /></div>
                 <div className={styles.item}><p className={styles.text}>{contact.name}</p><p className={styles.subtext}>{contact.email}</p></div>
                 <div className={styles.item}><p className={styles.text}>{contact.country?.name}</p><p className={styles.subtext}>{contact.region?.name}</p></div>
                 <div className={styles.item}><p className={styles.text}>{contact.company?.name}</p></div>
@@ -152,10 +164,12 @@ const ContactPage = () => {
 
     const selectRegion = (event) => {
         handleSelectChange(event, regions)
+        console.log(regions)
         setSelectedRegion(findById(event.target.value, regions))
     }
 
     const selectCountry = (event) => {
+        console.log(event.target.value, findById(event.target.value, selectedRegion.countries))
         handleSelectChange(event, selectedRegion.countries)
         setSelectedCountry(findById(event.target.value, selectedRegion.countries))
     }
@@ -196,7 +210,7 @@ const ContactPage = () => {
             {selectedContacts.length > 0 ? <div className={styles.selectedContactsContainer}><p className={styles.selectedContacts}>{`${selectedContacts.length} seleccionados`}</p> <button onClick={() => dispatch(deleteSelectedContacts(selectedContacts.map(contact => contact._id)))} className={styles.deleteContacts}> <i className={`fa fa-trash ${styles.iconD}`}></i> Eliminar contactos</button>  </div> : null}
             <div className={styles.table}>
                 <div className={`${styles.row} ${styles.firstRow}`} style={{ height: 66.5, borderBottom: '1px solid #e8e8e8' }}>
-                    <div className={`${styles.item} ${styles.header}`} style={{ flexDirection: 'column' }}> <input className={styles.check} type={'checkbox'} /> </div>
+                    <div className={`${styles.item} ${styles.header}`} style={{ flexDirection: 'column' }}> <input onChange={(evt) => dispatch(selectAllContacts(contacts.map(contact => contact._id), evt.target.checked))} checked={selectedContacts.length === contacts.length ? true : false} className={styles.check} type={'checkbox'} /> </div>
                     <div className={`${styles.item} ${styles.header}`} onClick={() => { sortBy('name', contacts, nameAsc); setNameAsc(!nameAsc) }}>Contacto <img className={styles.sort} src={'../images/sort.jpeg'} /></div>
                     <div className={`${styles.item} ${styles.header}`} onClick={() => { sortBySubAttibutes('country', 'name', contacts, regionAsc); setRegionAsc(!regionAsc) }}>País/Región <img className={styles.sort} src={'../images/sort.jpeg'} /> </div>
                     <div className={`${styles.item} ${styles.header}`} onClick={() => { sortBySubAttibutes('company', 'name', contacts, companyAsc); setCompanyAsc(!companyAsc) }}>Compañía <img className={styles.sort} src={'../images/sort.jpeg'} /></div>
@@ -233,7 +247,7 @@ const ContactPage = () => {
                             </div>
                             <div className={styles.inputContainer}>
                                 <label className={styles.important} htmlFor={'company'}>Compañia:</label>
-                                <select className={styles.input} name='company' defaultValue={""} required={true} onChange={selectCompany}>
+                                <select className={styles.input} name='company' defaultValue={""} required={true} onChange={selectCompany} value={contact.company._id}>
                                     <option disabled value={""} >Compañía</option>
                                     {companies.map((company) => <option key={company._id} value={company._id}>{company.name}</option>)}
                                 </select>
@@ -244,21 +258,21 @@ const ContactPage = () => {
                     <div className={styles.secondaryData}>
                         <div className={styles.inputContainer}>
                             <label htmlFor={'region'}>Region:</label>
-                            <select className={styles.input} name='region' defaultValue={""} required={true} onChange={selectRegion}>
+                            <select className={styles.input} name='region' defaultValue={""} required={true} onChange={selectRegion} value={contact.region._id}>
                                 <option disabled value={""} >Region</option>
                                 {regions.map((region) => <option key={region._id} value={region._id}>{region.name}</option>)}
                             </select>
                         </div>
                         <div className={styles.inputContainer}>
                             <label htmlFor={'country'}>País:</label>
-                            <select className={styles.input} name='country' disabled={selectedRegion._id ? false : true} defaultValue={""} required={true} onChange={selectCountry}>
+                            <select className={styles.input} name='country' defaultValue={""} disabled={selectedRegion._id ? false : true} required={true} onChange={selectCountry} value={contact.country._id}>
                                 <option disabled value={""} >País</option>
                                 {selectedRegion.countries.map((country) => <option key={country._id} value={country._id}>{country.name}</option>)}
                             </select>
                         </div>
                         <div className={styles.inputContainer}>
                             <label htmlFor={'city'}>Ciudad:</label>
-                            <select className={styles.input} name='city' defaultValue={""} disabled={selectedCountry._id ? false : true} required={true} onChange={selectCity}>
+                            <select className={styles.input} name='city' defaultValue={""} disabled={selectedCountry._id ? false : true} required={true} onChange={selectCity} value={contact.city._id}>
                                 <option disabled value={""} >Ciudad</option>
                                 {selectedCountry.cities.map((city) => <option key={city._id} value={city._id}>{city.name}</option>)}
                             </select>

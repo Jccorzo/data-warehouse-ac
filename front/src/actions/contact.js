@@ -5,8 +5,15 @@ const createContactAction = (contact) => ({ type: CREATE_CONTACT, contact })
 const updateContactAction = (contact) => ({ type: UPDATE_CONTACT, contact })
 const deleteContactAction = (contactId) => ({ type: DELETE_CONTACT, contactId })
 
-export const selectContact = (contactId) => ({ type: SELECT_CONTACT, contactId })
+export const selectContact = (contactId, selected) => ({ type: SELECT_CONTACT, contactId, selected })
 export const getContactsAction = (contacts) => ({ type: GET_CONTACTS, contacts })
+
+export const selectAllContacts = (contacts, selected) =>
+    dispatch => {
+        contacts.forEach((contactId) => {
+            dispatch(selectContact(contactId, selected))
+        })
+    }
 
 export const createContact = (contact) =>
     async (dispatch) => {
