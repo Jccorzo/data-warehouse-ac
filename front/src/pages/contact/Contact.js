@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import styles from './Contact.module.css';
 import Modal from '../../components/common/modal/Modal';
 import { useDispatch, useSelector } from 'react-redux';

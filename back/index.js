@@ -22,7 +22,7 @@ app.use('*', middlewares.validateLogin);
 mongoose.set('useUnifiedTopology', true);
 
 // CONECTAR A LA BASE DE DATOS MONGO
-mongoose.connect(config.url, {
+mongoose.connect(`mongodb://${config.host}:27017/dataW`, {
     useNewUrlParser: true
 }).then(() => {
     console.log("conexion exitosa con la base de datos");

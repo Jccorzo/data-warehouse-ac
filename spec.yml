@@ -476,20 +476,39 @@ paths:
                     properties:
                         name: 
                           type: "string"
-                        lastName:
+                        lastname:
                           type: "string"
                         position:
                           type: "string"
                         email:
                           type: "string"
                         company:
-                          type: "string"
-                        city: 
                           type: "object"
-                          properties: 
+                          properties:
+                            _id: 
+                              type: "string"
                             name: 
                               type: "string"
-                            cityId:
+                        country: 
+                          type: "object"
+                          properties:
+                            _id: 
+                              type: "string"
+                            name: 
+                              type: "string"
+                        region: 
+                          type: "object"
+                          properties:
+                            _id: 
+                              type: "string"
+                            name: 
+                              type: "string"
+                        city: 
+                          type: "object"
+                          properties:
+                            _id: 
+                              type: "string"
+                            name: 
                               type: "string"
                         address:
                           type: "string"
@@ -500,7 +519,7 @@ paths:
                             properties:
                               name:
                                 type: "string"
-                              value: 
+                              account: 
                                 type: "string"
                               preference: 
                                 type: "string"
