@@ -2,24 +2,17 @@
 
 ## Hi!
 
-Run this project with: `docker-compose up` command
+Run this project with: `docker-compose up` command. You will need to have free the following ports: 3000, 3001, 27017
 
 you could access app through **http://localhost:3000/** 
 
 we have two users as follow:
-    {
-      "name": "Joe",
-      "email": "jsmith@mail.com",
-      "admin": false,
-      "lastname": "Smith",
-      "password": "123456"
-    },
-    {
-      "name": "Jen",
-      "email": "jford@mail.com",
-      "admin": true,
-      "lastname": "Ford",
-      "password": "123456"
-    }
+    admin user:
+         email: jford@mail.com
+         password: 123456
+    
+   normal user:
+        email: jsmith@mail.com
+        password: 123456
 
 
