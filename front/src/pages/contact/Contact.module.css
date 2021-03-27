@@ -200,8 +200,20 @@
     margin: 0 5px;
 }
 
-.formButtons > input {
+.confirmButton {
     background-color: #0683F9;
+    color: white;
+}
+
+.confirmButton:disabled {
+    background-color: rgba(0,0,0,0.25);
+    color: white;
+}
+
+.cancelButton {
+    background-color: white;
+    color: #0683F9;
+    border: 1px solid #0683F9;
 }
 
 .important::after {
@@ -343,4 +355,62 @@ select:disabled {
     position: absolute;
     z-index: 2;
     height: 8px;
+}
+
+.deleteContactsModal{
+    width: 339px;
+    height: 303px;
+    background-color: white;
+    display: flex;
+    padding: 25px 28px;
+    margin: auto;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.deleteImage {
+    height: 120px;
+    width: 120px;
+}
+
+.deleteText {
+    text-align: center;
+    font-size: 14px;
+}
+
+.deleteButtonsContainer {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.cancelDelete {
+    border-radius: 2px;
+    background-color: white;
+    color: #0683F9;
+    border: 1px solid #0683F9;
+    width: 130px;
+    height: 41px;
+}
+
+.confirmDelete {
+    background-color: #F03738;
+    color: white;
+    border-radius: 2px;
+    border: none;
+    width: 130px;
+    height: 41px;
+}
+
+button {
+    cursor: pointer;
+}
+
+button:hover {
+    opacity: 0.6;
+}
+
+button:active{
+    transform: translateY(-5px);
 }

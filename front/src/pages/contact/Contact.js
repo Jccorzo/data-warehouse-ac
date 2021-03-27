@@ -67,9 +67,11 @@ const ContactPage = () => {
     const [interestAsc, setInterestAsc] = useState(true);
 
     const [contactModal, setContactModal] = useState(false);
-    const [contactAction, setContactAction] = useState('Nuevo contacto')
+    const [contactAction, setContactAction] = useState('Nuevo contacto');
+    const [deleteModal, setDeleteModal] = useState(false);
 
     const [contact, setContact] = useState(resetContact())
+    const [contactReadyToSave, setContactReadyToSave] = useState(false)
 
     const [selectedRegion, setSelectedRegion] = useState({ _id: '', countries: [] });
     const [selectedCountry, setSelectedCountry] = useState({ _id: '', cities: [] });
@@ -78,32 +80,19 @@ const ContactPage = () => {
     const [channels] = useState(["Teléfono", "Email", "WhatsApp", "Facebook", "Twitter"])
 
     const getColor = (interest) => {
-        if (interest === 25) {
+        if (interest == 25) {
             return '#1CC1F5'
-        } else if (interest === 50) {
+        } else if (interest == 50) {
             return '#FFC700'
-        } else if (interest === 75) {
+        } else if (interest == 75) {
             return '#FF6F00'
-        } else if (interest === 100) {
+        } else if (interest == 100) {
             return '#DE0028'
         }
     }
 
     const contacts = useSelector(state => state.contact.contacts)
     const selectedContacts = contacts.filter(contact => contact.selected === true)
-    const contactList =
-        contacts.map(contact => (
-            <div key={contact._id} className={styles.row}>
-                <div className={styles.item}><input className={styles.check} type={'checkbox'} checked={contact.selected} onChange={(evt) => dispatch(selectContact(contact._id, evt.target.checked))} /></div>
-                <div className={styles.item}><p className={styles.text}>{contact.name}</p><p className={styles.subtext}>{contact.email}</p></div>
-                <div className={styles.item}><p className={styles.text}>{contact.country?.name}</p><p className={styles.subtext}>{contact.region?.name}</p></div>
-                <div className={styles.item}><p className={styles.text}>{contact.company?.name}</p></div>
-                <div className={styles.item}><p className={styles.text}>{contact.position}</p></div>
-                <div className={styles.item} style={{ flexDirection: 'row', alignItems: 'center' }}><p className={styles.text} style={{ width: 24 }}>{contact.interest}%</p> <div className={styles.interestBarContainer}> <div className={styles.interestBarDown} /> <div className={styles.interestBarUp} style={{ backgroundColor: getColor(contact.interest), width: `${contact.interest}%` }} /> </div></div>
-                <div className={`${styles.item} ${styles.actionsColumn}`} style={{ alignItems: 'center' }}> <div className={styles.threeDots}></div>  <div className={styles.actionsContainer}><i className={'fa fa-pencil'}></i>  <i className={'fa fa-trash'} onClick={() => dispatch(deleteContactById(contact._id))} ></i></div></div>
-            </div>
-        ))
-
 
     const regions = useSelector(state => state.region.regions)
     const companies = useSelector(state => state.company.companies)
@@ -111,6 +100,27 @@ const ContactPage = () => {
     useEffect(() => {
         dispatch(getContacts())
     }, [])
+
+    useEffect(() => {
+        const obj = {
+            name: contact.name,
+            lastname: contact.lastname,
+            position: contact.position,
+            email: contact.email,
+            company: contact.company._id,
+            region: contact.region._id,
+            country: contact.country._id,
+            city: contact.city._id,
+            address: contact.address
+        }
+        const length = Object.keys(obj).map(key => contact[key]).filter(value => value).length
+
+        if(length == 9){
+            setContactReadyToSave(true)
+        } else {
+            setContactReadyToSave(false)
+        }
+    }, [contact])
 
     const getContactsBy = () => dispatch(getContactsByWord(search))
 
@@ -185,13 +195,56 @@ const ContactPage = () => {
 
     const onSubmit = (event) => {
         event.preventDefault();
-        dispatch(createContact(contact))
+        if (contactAction === 'Nuevo contacto') {
+            dispatch(createContact(contact))
+        } else {
+            dispatch(updateContact(contact))
+        }
         setContact(resetContact())
         setSelectedCity({ _id: '' })
         setSelectedCountry({ _id: '', cities: [] })
         setSelectedRegion({ _id: '', countries: [] })
         setContactModal(false)
     }
+
+    const openToUpdateContact = (contact) => {
+        const region = regions.find(region => region._id == contact.region._id)
+        const country = findById(contact.country._id, region.countries)
+        const city = findById(contact.city._id, country.cities)
+        setSelectedRegion(region)
+        setSelectedCountry(country)
+        setSelectedCity(city)
+        setContact(contact)
+        setContactAction('Editar contacto')
+        modalAction()
+    }
+
+    const addNewContact = () => {
+        setContactAction('Nuevo contacto')
+        setSelectedCity({ _id: '' })
+        setSelectedCountry({ _id: '', cities: [] })
+        setSelectedRegion({ _id: '', countries: [] })
+        setContact(resetContact())
+        modalAction()
+    }
+
+    const deleteContacts = () => {
+        dispatch(dispatch(deleteSelectedContacts(selectedContacts.map(contact => contact._id))))
+        setDeleteModal(false)
+    }
+
+    const contactList =
+        contacts.map(contact => (
+            <div key={contact._id} className={styles.row}>
+                <div className={styles.item}><input className={styles.check} type={'checkbox'} checked={contact.selected} onChange={(evt) => dispatch(selectContact(contact._id, evt.target.checked))} /></div>
+                <div className={styles.item}><p className={styles.text}>{contact.name}</p><p className={styles.subtext}>{contact.email}</p></div>
+                <div className={styles.item}><p className={styles.text}>{contact.country?.name}</p><p className={styles.subtext}>{contact.region?.name}</p></div>
+                <div className={styles.item}><p className={styles.text}>{contact.company?.name}</p></div>
+                <div className={styles.item}><p className={styles.text}>{contact.position}</p></div>
+                <div className={styles.item} style={{ flexDirection: 'row', alignItems: 'center' }}><p className={styles.text} style={{ width: 24 }}>{contact.interest}%</p> <div className={styles.interestBarContainer}> <div className={styles.interestBarDown} /> <div className={styles.interestBarUp} style={{ backgroundColor: getColor(contact.interest), width: `${contact.interest}%` }} /> </div></div>
+                <div className={`${styles.item} ${styles.actionsColumn}`} style={{ alignItems: 'center' }}> <div className={styles.threeDots}></div>  <div className={styles.actionsContainer}><i onClick={() => openToUpdateContact(contact)} className={'fa fa-pencil'}></i>  <i className={'fa fa-trash'} onClick={() => dispatch(deleteContactById(contact._id))} ></i></div></div>
+            </div>
+        ))
 
     return (
         <main className={styles.main}>
@@ -204,10 +257,10 @@ const ContactPage = () => {
                 <div className={styles.buttonsContainer}>
                     <img className={styles.img} src={'../images/upload.jpeg'} style={{ border: '1px solid #1d72c2', visibility: 'hidden' }} />
                     <button style={{ visibility: 'hidden' }} className={styles.exportContact}>Exportar contactos</button>
-                    <button onClick={modalAction} className={styles.addContact}>Agregar contacto</button>
+                    <button onClick={addNewContact} className={styles.addContact}>Agregar contacto</button>
                 </div>
             </div>
-            {selectedContacts.length > 0 ? <div className={styles.selectedContactsContainer}><p className={styles.selectedContacts}>{`${selectedContacts.length} seleccionados`}</p> <button onClick={() => dispatch(deleteSelectedContacts(selectedContacts.map(contact => contact._id)))} className={styles.deleteContacts}> <i className={`fa fa-trash ${styles.iconD}`}></i> Eliminar contactos</button>  </div> : null}
+            {selectedContacts.length > 0 ? <div className={styles.selectedContactsContainer}><p className={styles.selectedContacts}>{`${selectedContacts.length} seleccionados`}</p> <button onClick={() => setDeleteModal(true)} className={styles.deleteContacts}> <i className={`fa fa-trash ${styles.iconD}`}></i> Eliminar contactos</button>  </div> : null}
             <div className={styles.table}>
                 <div className={`${styles.row} ${styles.firstRow}`} style={{ height: 66.5, borderBottom: '1px solid #e8e8e8' }}>
                     <div className={`${styles.item} ${styles.header}`} style={{ flexDirection: 'column' }}> <input onChange={(evt) => dispatch(selectAllContacts(contacts.map(contact => contact._id), evt.target.checked))} checked={selectedContacts.length === contacts.length ? true : false} className={styles.check} type={'checkbox'} /> </div>
@@ -283,7 +336,7 @@ const ContactPage = () => {
                         </div>
                         <div className={styles.inputContainer}>
                             <label htmlFor={'interest'} style={{ width: 'max-content' }} >Interés:</label>
-                            <select className={styles.input} style={{ width: 'max-content' }} name={'interest'} defaultValue={0} required={true} onChange={handleInputChange}>
+                            <select className={styles.input} style={{ width: 'max-content' }} name={'interest'} defaultValue={0} required={true} onChange={handleInputChange} value={contact.interest}>
                                 <option value={0} >0%</option>
                                 <option value={25} >25%</option>
                                 <option value={50} >50%</option>
@@ -296,7 +349,7 @@ const ContactPage = () => {
                     {channels.map((channel, index) => (
                         <div key={index} className={styles.thirdData}>
                             <div className={styles.inputContainer}>
-                                <label style={{ width: 'max-content' }}>Cuenta de usuario:</label>
+                                <label style={{ width: 'max-content' }}>Canal:</label>
                                 <input className={styles.input} disabled={true} onChange={(evt) => handleInputChangeForChannels(evt, index, 'name')} type={"text"} value={channel} />
                             </div>
                             <div className={styles.inputContainer}>
@@ -315,11 +368,21 @@ const ContactPage = () => {
                     )}
 
                     <div className={styles.formButtons}>
-                        <button onClick={modalAction}>Cancelar</button>
-                        <input type={'submit'} value={'Guardar'} disabled={false} />
+                        <button className={styles.cancelButton} onClick={modalAction}>Cancelar</button>
+                        <input className={styles.confirmButton} type={'submit'} value={'Guardar'} disabled={!contactReadyToSave} />
                     </div>
 
                 </form>
+            </Modal>
+            <Modal visible={deleteModal}>
+                <div className={styles.deleteContactsModal}>
+                    <img className={styles.deleteImage} alt={'delete icon'} src={'../images/delete-icon.jpeg'} />
+                    <p className={styles.deleteText}>¿Seguro que deseas eliminar los contactos seleccionados?</p>
+                    <div className={styles.deleteButtonsContainer}>
+                        <button className={styles.cancelDelete} onClick={() => setDeleteModal(false)}>Cancelar</button>
+                        <button className={styles.confirmDelete} onClick={deleteContacts}>Eliminar</button>
+                    </div>
+                </div>
             </Modal>
         </main>
     )
