@@ -4,7 +4,8 @@
   "description": "Data Warehouse",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "seed": "mongoimport --host localhost --db dataW --collection users --type json --file ./database/init.json --jsonArray",
+    "start": "node index.js"
   },
   "author": "",
   "license": "ISC",
