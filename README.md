@@ -33,4 +33,3 @@ Es necesario tener instalado previamente mongoDB, y ejecutandose localmente, ya 
 
 
 Después de haber ejecutado la aplicación de cualquiera de los dos métodos mencionados anteriormente, podrás acceder al front medinte la siguiente url:  **http://localhost:3000/** 
-
